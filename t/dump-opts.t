@@ -1,8 +1,32 @@
-use t::TestYAMLOld tests => 19;
+use t::TestYAMLOld tests => 23;
 
 run_roundtrip_nyn();
 
 __DATA__
+=== $YAML::UseHeader works
++++ config
+local $YAML::UseHeader = 0
++++ perl
+(['34', '45'], ['56', '67'])
++++ yaml
+- 34
+- 45
+---
+- 56
+- 67
+=== $YAML::Old::UseHeader overrides $YAML::UseHeader
++++ config
+local $YAML::UseHeader = 0;
+local $YAML::Old::UseHeader = 1;
++++ perl
+(['34', '45'], ['56', '67'])
++++ yaml
+---
+- 34
+- 45
+---
+- 56
+- 67
 ===
 +++ config
 local $YAML::Old::UseHeader = 0

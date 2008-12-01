@@ -36,34 +36,78 @@ field blessed_map => {};
 # easy to configure.
 sub set_global_options {
     my $self = shift;
-    $self->spec_version($YAML::Old::SpecVersion)
-      if defined $YAML::Old::SpecVersion;
-    $self->indent_width($YAML::Old::Indent)
-      if defined $YAML::Old::Indent;
-    $self->use_header($YAML::Old::UseHeader)
-      if defined $YAML::Old::UseHeader;
-    $self->use_version($YAML::Old::UseVersion)
-      if defined $YAML::Old::UseVersion;
-    $self->sort_keys($YAML::Old::SortKeys)
-      if defined $YAML::Old::SortKeys;
-    $self->anchor_prefix($YAML::Old::AnchorPrefix)
-      if defined $YAML::Old::AnchorPrefix;
-    $self->dump_code($YAML::Old::DumpCode || $YAML::Old::UseCode)
-      if defined $YAML::Old::DumpCode or defined $YAML::Old::UseCode;
-    $self->use_block($YAML::Old::UseBlock)
-      if defined $YAML::Old::UseBlock;
-    $self->use_fold($YAML::Old::UseFold)
-      if defined $YAML::Old::UseFold;
-    $self->compress_series($YAML::Old::CompressSeries)
-      if defined $YAML::Old::CompressSeries;
-    $self->inline_series($YAML::Old::InlineSeries)
-      if defined $YAML::Old::InlineSeries;
-    $self->use_aliases($YAML::Old::UseAliases)
-      if defined $YAML::Old::UseAliases;
-    $self->purity($YAML::Old::Purity)
-      if defined $YAML::Old::Purity;
-    $self->stringify($YAML::Old::Stringify)
-      if defined $YAML::Old::Stringify;
+    $self->spec_version(
+       defined $YAML::Old::SpecVersion ? $YAML::Old::SpecVersion :
+       defined $YAML::SpecVersion ? $YAML::SpecVersion :
+       ()
+    );
+    $self->indent_width(
+       defined $YAML::Old::Indent ? $YAML::Old::Indent :
+       defined $YAML::Indent ? $YAML::Indent :
+       ()
+    );
+    $self->use_header(
+       defined $YAML::Old::UseHeader ? $YAML::Old::UseHeader :
+       defined $YAML::UseHeader ? $YAML::UseHeader :
+       ()
+    );
+    $self->use_version(
+       defined $YAML::Old::UseVersion ? $YAML::Old::UseVersion :
+       defined $YAML::UseVersion ? $YAML::UseVersion :
+       ()
+    );
+    $self->sort_keys(
+       defined $YAML::Old::SortKeys ? $YAML::Old::SortKeys :
+       defined $YAML::SortKeys ? $YAML::SortKeys :
+       ()
+    );
+    $self->anchor_prefix(
+       defined $YAML::Old::AnchorPrefix ? $YAML::Old::AnchorPrefix :
+       defined $YAML::AnchorPrefix ? $YAML::AnchorPrefix :
+       ()
+    );
+    $self->dump_code(
+        defined $YAML::Old::DumpCode ? $YAML::Old::DumpCode :
+        defined $YAML::Old::UseCode ? $YAML::Old::UseCode :
+        defined $YAML::DumpCode ? $YAML::DumpCode :
+        defined $YAML::UseCode ? $YAML::UseCode :
+        ()
+    );
+    $self->use_block(
+       defined $YAML::Old::UseBlock ? $YAML::Old::UseBlock :
+       defined $YAML::UseBlock ? $YAML::UseBlock :
+       ()
+    );
+    $self->use_fold(
+       defined $YAML::Old::UseFold ? $YAML::Old::UseFold :
+       defined $YAML::UseFold ? $YAML::UseFold :
+       ()
+    );
+    $self->compress_series(
+       defined $YAML::Old::CompressSeries ? $YAML::Old::CompressSeries :
+       defined $YAML::CompressSeries ? $YAML::CompressSeries :
+       ()
+    );
+    $self->inline_series(
+       defined $YAML::Old::InlineSeries ? $YAML::Old::InlineSeries :
+       defined $YAML::InlineSeries ? $YAML::InlineSeries :
+       ()
+    );
+    $self->use_aliases(
+       defined $YAML::Old::UseAliases ? $YAML::Old::UseAliases :
+       defined $YAML::UseAliases ? $YAML::UseAliases :
+       ()
+    );
+    $self->purity(
+       defined $YAML::Old::Purity ? $YAML::Old::Purity :
+       defined $YAML::Purity ? $YAML::Purity :
+       ()
+    );
+    $self->stringify(
+       defined $YAML::Old::Stringify ? $YAML::Old::Stringify :
+       defined $YAML::Stringify ? $YAML::Stringify :
+       ()
+    );
 }
 
 sub dump {

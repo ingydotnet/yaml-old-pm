@@ -23,8 +23,13 @@ field inline => '';
 
 sub set_global_options {
     my $self = shift;
-    $self->load_code($YAML::Old::LoadCode || $YAML::Old::UseCode)
-      if defined $YAML::Old::LoadCode or defined $YAML::Old::UseCode;
+    $self->load_code(
+        defined $YAML::Old::LoadCode ? $YAML::Old::LoadCode :
+        defined $YAML::Old::UseCode ? $YAML::Old::UseCode :
+        defined $YAML::LoadCode ? $YAML::LoadCode :
+        defined $YAML::UseCode ? $YAML::UseCode :
+        ()
+    );
 }
 
 sub load {
