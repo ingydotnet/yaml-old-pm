@@ -21,15 +21,15 @@ field loader_object =>
 
 sub Dump {
     my $yaml = YAML::Old->new;
-    $yaml->dumper_class($YAML::Old::DumperClass)
-        if $YAML::Old::DumperClass;
+    $yaml->dumper_class($YAML::Old::DumperClass || $YAML::DumperClass)
+        if $YAML::Old::DumperClass or $YAML::DumperClass;
     return $yaml->dumper_object->dump(@_);
 }
 
 sub Load {
     my $yaml = YAML::Old->new;
-    $yaml->loader_class($YAML::Old::LoaderClass)
-        if $YAML::Old::LoaderClass;
+    $yaml->loader_class($YAML::Old::LoaderClass || $YAML::LoaderClass)
+        if $YAML::Old::LoaderClass or $YAML::LoaderClass;
     return $yaml->loader_object->load(@_);
 }
 

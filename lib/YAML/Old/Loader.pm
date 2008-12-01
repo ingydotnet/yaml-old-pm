@@ -286,10 +286,15 @@ sub _parse_explicit {
         }
     }
     # This !perl/@Foo and !perl/$Foo are deprecated but still parsed
-    elsif ($YAML::Old::TagClass->{$explicit} ||
-           $explicit =~ m{^perl/(\@|\$)?([a-zA-Z](\w|::)+)$}
-          ) {
-        $class = $YAML::Old::TagClass->{$explicit} || $2;
+    elsif (
+        $YAML::Old::TagClass->{$explicit} ||
+        $YAML::TagClass->{$explicit} ||
+        $explicit =~ m{^perl/(\@|\$)?([a-zA-Z](\w|::)+)$}
+    ) {
+        $class =
+            $YAML::Old::TagClass->{$explicit} ||
+            $YAML::TagClass->{$explicit} ||
+            $2;
         if ($class->can('yaml_load')) {
             require YAML::Old::Node;
             return $class->yaml_load(YAML::Old::Node->new($node, $explicit));
