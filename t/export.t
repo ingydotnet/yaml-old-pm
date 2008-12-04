@@ -5,7 +5,7 @@ BEGIN {
 }
 use t::TestYAMLOld tests => 3;
 
-use YAML;
+use YAML::Old;
 
 ok defined(&Dump),
     'Dump() is exported';

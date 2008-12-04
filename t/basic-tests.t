@@ -1,7 +1,7 @@
 use t::TestYAMLOld tests => 4;
  
 filters {
-    yaml => [yaml => 'dumper'],
+    yaml => [yaml_load => 'dumper'],
     perl => [strict => eval => 'dumper'],
 };
 

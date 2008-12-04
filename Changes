@@ -1,4 +1,11 @@
 ---
+version: 0.81
+date:    Wed Dec  3 22:57:59 PST 2008
+changes:
+- Remove a couple references to YAML.pm in the tests.
+- Used update Test::Base to ensure Filter::Util::Call
+
+---
 version: 0.80
 date:    Mon Dec  1 02:34:59 PST 2008
 changes:

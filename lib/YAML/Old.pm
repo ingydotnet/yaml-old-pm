@@ -4,7 +4,7 @@ use YAML::Old::Base;
 use base 'YAML::Old::Base';
 use YAML::Old::Node;         # XXX This is a temp fix for Module::Build
 use 5.006001;
-our $VERSION = '0.80';
+our $VERSION = '0.81';
 our @EXPORT = qw'Dump Load';
 our @EXPORT_OK = qw'freeze thaw DumpFile LoadFile Bless Blessed';
 
