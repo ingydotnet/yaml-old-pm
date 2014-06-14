@@ -12,8 +12,6 @@ YAML::Old - Old YAML.pm Legacy Code
 
 =for html
 <a href="https://travis-ci.org/ingydotnet/yaml-old-pm"><img src="https://travis-ci.org/ingydotnet/yaml-old-pm.png" alt="yaml-old-pm"></a>
-
-=for html
 <a href="https://coveralls.io/r/ingydotnet/yaml-old-pm?branch=master"><img src="https://coveralls.io/repos/ingydotnet/yaml-old-pm/badge.png" alt="yaml-old-pm"></a>
 
 =head1 SYNOPSIS

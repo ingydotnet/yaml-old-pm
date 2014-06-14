@@ -3,9 +3,7 @@ YAML::Old
 
 Old YAML.pm Legacy Code
 
-<badge-travis ingydotnet/yaml-old-pm>
-
-<badge-coveralls ingydotnet/yaml-old-pm>
+<badge travis coveralls ingydotnet/yaml-old-pm>
 
 = Synopsis
 
