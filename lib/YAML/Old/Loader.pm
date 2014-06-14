@@ -1,20 +1,22 @@
 package YAML::Old::Loader;
-use strict; use warnings;
-use YAML::Old::Base;
-use base 'YAML::Old::Loader::Base';
+
+use YAML::Old::Mo;
+extends 'YAML::Old::Loader::Base';
+
+use YAML::Old::Loader::Base;
 use YAML::Old::Types;
 
 # Context constants
-use constant LEAF => 1;
+use constant LEAF       => 1;
 use constant COLLECTION => 2;
-use constant VALUE => "\x07YAML\x07VALUE\x07";
-use constant COMMENT => "\x07YAML\x07COMMENT\x07";
+use constant VALUE      => "\x07YAML\x07VALUE\x07";
+use constant COMMENT    => "\x07YAML\x07COMMENT\x07";
 
 # Common YAML character sets
 my $ESCAPE_CHAR = '[\\x00-\\x08\\x0b-\\x0d\\x0e-\\x1f]';
-my $FOLD_CHAR = '>';
-my $LIT_CHAR = '|';    
-my $LIT_CHAR_RX = "\\$LIT_CHAR";    
+my $FOLD_CHAR   = '>';
+my $LIT_CHAR    = '|';
+my $LIT_CHAR_RX = "\\$LIT_CHAR";
 
 sub load {
     my $self = shift;
@@ -30,10 +32,10 @@ sub _parse {
     $self->{stream} =~ s|\015\012|\012|g;
     $self->{stream} =~ s|\015|\012|g;
     $self->line(0);
-    $self->die('YAML_PARSE_ERR_BAD_CHARS') 
+    $self->die('YAML_PARSE_ERR_BAD_CHARS')
       if $self->stream =~ /$ESCAPE_CHAR/;
-    $self->die('YAML_PARSE_ERR_NO_FINAL_NEWLINE') 
-      if length($self->stream) and 
+    $self->die('YAML_PARSE_ERR_NO_FINAL_NEWLINE')
+      if length($self->stream) and
          $self->{stream} !~ s/(.)\n\Z/$1/s;
     $self->lines([split /\x0a/, $self->stream, -1]);
     $self->line(1);
@@ -88,7 +90,7 @@ sub _parse {
 
         $directives{YAML} ||= '1.0';
         $directives{TAB} ||= 'NONE';
-        ($self->{major_version}, $self->{minor_version}) = 
+        ($self->{major_version}, $self->{minor_version}) =
           split /\./, $directives{YAML}, 2;
         $self->die('YAML_PARSE_ERR_BAD_MAJOR_VERSION', $directives{YAML})
           if $self->major_version ne '1';
@@ -111,7 +113,7 @@ sub _parse_node {
     $self->preface('');
     my ($node, $type, $indicator, $escape, $chomp) = ('') x 5;
     my ($anchor, $alias, $explicit, $implicit, $class) = ('') x 5;
-    ($anchor, $alias, $explicit, $implicit, $preface) = 
+    ($anchor, $alias, $explicit, $implicit, $preface) =
       $self->_parse_qualifiers($preface);
     if ($anchor) {
         $self->anchor2node->{$anchor} = CORE::bless [], 'YAML-anchor2node';
@@ -119,7 +121,7 @@ sub _parse_node {
     $self->inline('');
     while (length $preface) {
         my $line = $self->line - 1;
-        if ($preface =~ s/^($FOLD_CHAR|$LIT_CHAR_RX)(-|\+)?\d*\s*//) { 
+        if ($preface =~ s/^($FOLD_CHAR|$LIT_CHAR_RX)(-|\+)?\d*\s*//) {
             $indicator = $1;
             $chomp = $2 if defined($2);
         }
@@ -137,20 +139,20 @@ sub _parse_node {
         }
         else {
             $node = do {my $sv = "*$alias"};
-            push @{$self->anchor2node->{$alias}}, [\$node, $self->line]; 
+            push @{$self->anchor2node->{$alias}}, [\$node, $self->line];
         }
     }
     elsif (length $self->inline) {
         $node = $self->_parse_inline(1, $implicit, $explicit);
         if (length $self->inline) {
-            $self->die('YAML_PARSE_ERR_SINGLE_LINE'); 
+            $self->die('YAML_PARSE_ERR_SINGLE_LINE');
         }
     }
     elsif ($indicator eq $LIT_CHAR) {
         $self->{level}++;
         $node = $self->_parse_block($chomp);
         $node = $self->_parse_implicit($node) if $implicit;
-        $self->{level}--; 
+        $self->{level}--;
     }
     elsif ($indicator eq $FOLD_CHAR) {
         $self->{level}++;
@@ -227,7 +229,7 @@ sub _parse_qualifiers {
         }
         elsif ($preface =~ s/^\&([^ ,:]+)\s*//) {
             $token = $1;
-            $self->die('YAML_PARSE_ERR_BAD_ANCHOR') 
+            $self->die('YAML_PARSE_ERR_BAD_ANCHOR')
               unless $token =~ /^[a-zA-Z0-9]+$/;
             $self->die('YAML_PARSE_ERR_MANY_ANCHOR') if $anchor;
             $self->die('YAML_PARSE_ERR_ANCHOR_ALIAS') if $alias;
@@ -242,10 +244,10 @@ sub _parse_qualifiers {
             $alias = $token;
         }
     }
-    return ($anchor, $alias, $explicit, $implicit, $preface); 
+    return ($anchor, $alias, $explicit, $implicit, $preface);
 }
 
-# Morph a node to it's explicit type  
+# Morph a node to it's explicit type
 sub _parse_explicit {
     my $self = shift;
     my ($node, $explicit) = @_;
@@ -262,7 +264,7 @@ sub _parse_explicit {
             my $value = $node->{VALUE()};
             $node = \$value;
         }
-        
+
         if ( $type eq "scalar" and length($class) and !ref($node) ) {
             my $value = $node;
             $node = \$value;
@@ -276,7 +278,7 @@ sub _parse_explicit {
     }
     if ($explicit =~ m{^!?perl/(glob|regexp|code)(?:\:(\w(\w|\:\:)*)?)?$}) {
         ($type, $class) = (($1 || ''), ($2 || ''));
-        my $type_class = "YAML::Type::$type";
+        my $type_class = "YAML::Old::Type::$type";
         no strict 'refs';
         if ($type_class->can('yaml_load')) {
             return $type_class->yaml_load($node, $class, $self);
@@ -286,15 +288,10 @@ sub _parse_explicit {
         }
     }
     # This !perl/@Foo and !perl/$Foo are deprecated but still parsed
-    elsif (
-        $YAML::Old::TagClass->{$explicit} ||
-        $YAML::TagClass->{$explicit} ||
-        $explicit =~ m{^perl/(\@|\$)?([a-zA-Z](\w|::)+)$}
-    ) {
-        $class =
-            $YAML::Old::TagClass->{$explicit} ||
-            $YAML::TagClass->{$explicit} ||
-            $2;
+    elsif ($YAML::Old::TagClass->{$explicit} ||
+           $explicit =~ m{^perl/(\@|\$)?([a-zA-Z](\w|::)+)$}
+          ) {
+        $class = $YAML::Old::TagClass->{$explicit} || $2;
         if ($class->can('yaml_load')) {
             require YAML::Old::Node;
             return $class->yaml_load(YAML::Old::Node->new($node, $explicit));
@@ -334,7 +331,7 @@ sub _parse_mapping {
             $key = $self->_parse_node();
             $key = "$key";
         }
-        # If "default" key (equals sign) 
+        # If "default" key (equals sign)
         elsif ($self->{content} =~ s/^\=\s*//) {
             $key = VALUE;
         }
@@ -350,7 +347,7 @@ sub _parse_mapping {
             $self->content($self->inline);
             $self->inline('');
         }
-            
+
         unless ($self->{content} =~ s/^:\s*//) {
             $self->die('YAML_LOAD_ERR_BAD_MAP_ELEMENT');
         }
@@ -406,7 +403,7 @@ sub _parse_inline {
     my ($top, $top_implicit, $top_explicit) = (@_, '', '', '');
     $self->{inline} =~ s/^\s*(.*)\s*$/$1/; # OUCH - mugwump
     my ($node, $anchor, $alias, $explicit, $implicit) = ('') x 5;
-    ($anchor, $alias, $explicit, $implicit, $self->{inline}) = 
+    ($anchor, $alias, $explicit, $implicit, $self->{inline}) =
       $self->_parse_qualifiers($self->inline);
     if ($anchor) {
         $self->anchor2node->{$anchor} = CORE::bless [], 'YAML-anchor2node';
@@ -422,7 +419,7 @@ sub _parse_inline {
         }
         else {
             $node = do {my $sv = "*$alias"};
-            push @{$self->anchor2node->{$alias}}, [\$node, $self->line]; 
+            push @{$self->anchor2node->{$alias}}, [\$node, $self->line];
         }
     }
     elsif ($self->inline =~ /^\{/) {
@@ -506,7 +503,7 @@ sub _parse_inline_seq {
         my $value = $self->_parse_inline();
         push @$node, $value;
         next if $self->inline =~ /^\s*\]/;
-        $self->die('YAML_PARSE_ERR_INLINE_SEQUENCE') 
+        $self->die('YAML_PARSE_ERR_INLINE_SEQUENCE')
           unless $self->{inline} =~ s/^\,\s*//;
     }
     return $node;
@@ -516,7 +513,8 @@ sub _parse_inline_seq {
 sub _parse_inline_double_quoted {
     my $self = shift;
     my $node;
-    if ($self->inline =~ /^"((?:\\"|[^"])*)"\s*(.*)$/) {
+    # https://rt.cpan.org/Public/Bug/Display.html?id=90593
+    if ($self->inline =~ /^"((?:(?:\\"|[^"]){0,32766}){0,32766})"\s*(.*)$/) {
         $node = $1;
         $self->inline($2);
         $node =~ s/\\"/"/g;
@@ -532,7 +530,7 @@ sub _parse_inline_double_quoted {
 sub _parse_inline_single_quoted {
     my $self = shift;
     my $node;
-    if ($self->inline =~ /^'((?:''|[^'])*)'\s*(.*)$/) {
+    if ($self->inline =~ /^'((?:(?:''|[^']){0,32766}){0,32766})'\s*(.*)$/) {
         $node = $1;
         $self->inline($2);
         $node =~ s/''/'/g;
@@ -623,7 +621,7 @@ sub _parse_throwaway_comments {
 # 3) Find the next _content_ line
 #   A) Skip over any throwaways (Comments/blanks)
 #   B) Set $self->indent, $self->content, $self->line
-# 4) Expand tabs appropriately  
+# 4) Expand tabs appropriately
 sub _parse_next_line {
     my $self = shift;
     my ($type) = @_;
@@ -665,7 +663,7 @@ sub _parse_next_line {
         $offset = $self->offset->[++$level];
     }
     # Determine the offset for a new collection level
-    elsif ($type == COLLECTION and 
+    elsif ($type == COLLECTION and
            $self->preface =~ /^(\s*(\!\S*|\&\S+))*\s*$/) {
         $self->_parse_throwaway_comments();
         if ($self->eos) {
@@ -683,7 +681,7 @@ sub _parse_next_line {
         }
         $offset = $self->offset->[++$level];
     }
-        
+
     if ($type == LEAF) {
         while (@{$self->lines} and
                $self->lines->[0] =~ m{^( *)(\#)} and
@@ -697,13 +695,13 @@ sub _parse_next_line {
     else {
         $self->_parse_throwaway_comments();
     }
-    return if $self->eos; 
-    
+    return if $self->eos;
+
     if ($self->lines->[0] =~ /^---(\s|$)/) {
         $self->done(1);
         return;
     }
-    if ($type == LEAF and 
+    if ($type == LEAF and
         $self->lines->[0] =~ /^ {$offset}(.*)$/
        ) {
         $self->indent($offset);
@@ -718,7 +716,7 @@ sub _parse_next_line {
         while ($self->offset->[$level] > length($1)) {
             $level--;
         }
-        $self->die('YAML_PARSE_ERR_INCONSISTENT_INDENTATION') 
+        $self->die('YAML_PARSE_ERR_INCONSISTENT_INDENTATION')
           if $self->offset->[$level] != length($1);
         $self->indent(length($1));
         $self->content($2);
@@ -732,13 +730,18 @@ sub _parse_next_line {
 #==============================================================================
 
 # Printable characters for escapes
-my %unescapes = 
-  (
-   0 => "\x00", a => "\x07", t => "\x09",
-   n => "\x0a", v => "\x0b", f => "\x0c",
-   r => "\x0d", e => "\x1b", '\\' => '\\',
+my %unescapes = (
+   0 => "\x00",
+   a => "\x07",
+   t => "\x09",
+   n => "\x0a",
+   'v' => "\x0b", # Potential v-string error on 5.6.2 if not quoted
+   f => "\x0c",
+   r => "\x0d",
+   e => "\x1b",
+   '\\' => '\\',
   );
-   
+
 # Transform all the backslash style escape characters to their literal meaning
 sub _unescape {
     my $self = shift;
@@ -749,39 +752,3 @@ sub _unescape {
 }
 
 1;
-
-__END__
-
-=encoding utf8
-
-=head1 NAME
-
-YAML::Old::Loader - YAML::Old class for loading Perl objects to YAML
-
-=head1 SYNOPSIS
-
-    use YAML::Old::Loader;
-    my $loader = YAML::Old::Loader->new;
-    my $hash = $loader->load(<<'...');
-    foo: bar
-    ...
-
-=head1 DESCRIPTION
-
-YAML::Old::Loader is the module that YAML::Old used to deserialize YAML to Perl
-objects. It is fully object oriented and usable on its own.
-
-=head1 AUTHOR
-
-Ingy döt Net <ingy@cpan.org>
-
-=head1 COPYRIGHT
-
-Copyright (c) 2006, 2008. Ingy döt Net.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-See L<http://www.perl.com/perl/misc/Artistic.html>
-
-=cut

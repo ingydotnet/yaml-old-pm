@@ -1,24 +1,26 @@
 package YAML::Old::Types;
-use strict; use warnings;
-use YAML::Old::Base; use base 'YAML::Old::Base';
+
+use YAML::Old::Mo;
 use YAML::Old::Node;
 
 # XXX These classes and their APIs could still use some refactoring,
 # but at least they work for now.
 #-------------------------------------------------------------------------------
-package YAML::Type::blessed;
-use YAML::Old::Base; # XXX
+package YAML::Old::Type::blessed;
+
+use YAML::Old::Mo; # XXX
+
 sub yaml_dump {
     my $self = shift;
     my ($value) = @_;
-    my ($class, $type) = YAML::Old::Base->node_info($value);
+    my ($class, $type) = YAML::Old::Mo::Object->node_info($value);
     no strict 'refs';
     my $kind = lc($type) . ':';
     my $tag = ${$class . '::ClassTag'} ||
               "!perl/$kind$class";
     if ($type eq 'REF') {
         YAML::Old::Node->new(
-            {(&YAML::Old::VALUE, ${$_[0]})}, $tag
+            {(&YAML::VALUE, ${$_[0]})}, $tag
         );
     }
     elsif ($type eq 'SCALAR') {
@@ -30,7 +32,8 @@ sub yaml_dump {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::undef;
+package YAML::Old::Type::undef;
+
 sub yaml_dump {
     my $self = shift;
 }
@@ -40,7 +43,8 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::glob;
+package YAML::Old::Type::glob;
+
 sub yaml_dump {
     my $self = shift;
     my $ynode = YAML::Old::Node->new({}, '!perl/glob:');
@@ -53,14 +57,13 @@ sub yaml_dump {
                                atime mtime ctime blksize blocks);
                 undef $value;
                 $value->{stat} = YAML::Old::Node->new({});
-                map {$value->{stat}{shift @stats} = $_} stat(*{$_[0]});
-                $value->{fileno} = fileno(*{$_[0]});
-                {
+                if ($value->{fileno} = fileno(*{$_[0]})) {
                     local $^W;
+                    map {$value->{stat}{shift @stats} = $_} stat(*{$_[0]});
                     $value->{tell} = tell(*{$_[0]});
                 }
             }
-            $ynode->{$type} = $value; 
+            $ynode->{$type} = $value;
         }
     }
     return $ynode;
@@ -108,14 +111,16 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::code;
-my $dummy_warned = 0; 
+package YAML::Old::Type::code;
+
+my $dummy_warned = 0;
 my $default = '{ "DUMMY" }';
+
 sub yaml_dump {
     my $self = shift;
     my $code;
     my ($dumpflag, $value) = @_;
-    my ($class, $type) = YAML::Old::Base->node_info($value);
+    my ($class, $type) = YAML::Old::Mo::Object->node_info($value);
     my $tag = "!perl/code";
     $tag .= ":$class" if defined $class;
     if (not $dumpflag) {
@@ -131,7 +136,7 @@ sub yaml_dump {
             $code = $deparse->coderef2text($value);
         };
         if ($@) {
-            warn YAML::Old::YAML_DUMP_WARN_DEPARSE_FAILED() if $^W;
+            warn YAML::YAML_DUMP_WARN_DEPARSE_FAILED() if $^W;
             $code = $default;
         }
         bless $value, $class if $class;
@@ -140,7 +145,7 @@ sub yaml_dump {
     }
     $_[2] = $code;
     YAML::Old::Node->new($_[2], $tag);
-}    
+}
 
 sub yaml_load {
     my $self = shift;
@@ -163,25 +168,27 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::ref;
+package YAML::Old::Type::ref;
+
 sub yaml_dump {
     my $self = shift;
-    YAML::Old::Node->new({(&YAML::Old::VALUE, ${$_[0]})}, '!perl/ref')
+    YAML::Old::Node->new({(&YAML::VALUE, ${$_[0]})}, '!perl/ref')
 }
 
 sub yaml_load {
     my $self = shift;
     my ($node, $class, $loader) = @_;
     $loader->die('YAML_LOAD_ERR_NO_DEFAULT_VALUE', 'ptr')
-      unless exists $node->{&YAML::Old::VALUE};
-    return \$node->{&YAML::Old::VALUE};
+      unless exists $node->{&YAML::VALUE};
+    return \$node->{&YAML::VALUE};
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::regexp;
+package YAML::Old::Type::regexp;
+
 # XXX Be sure to handle blessed regexps (if possible)
 sub yaml_dump {
-    die "YAML::Type::regexp::yaml_dump not currently implemented";
+    die "YAML::Old::Type::regexp::yaml_dump not currently implemented";
 }
 
 use constant _QR_TYPES => {
@@ -202,12 +209,14 @@ use constant _QR_TYPES => {
     msi => sub { qr{$_[0]}msi },
     msix => sub { qr{$_[0]}msix },
 };
+
 sub yaml_load {
     my $self = shift;
     my ($node, $class) = @_;
-    return qr{$node} unless $node =~ /^\(\?([\-xism]*):(.*)\)\z/s;
+    return qr{$node} unless $node =~ /^\(\?([\^\-xism]*):(.*)\)\z/s;
     my ($flags, $re) = ($1, $2);
     $flags =~ s/-.*//;
+    $flags =~ s/^\^//;
     my $sub = _QR_TYPES->{$flags} || sub { qr{$_[0]} };
     my $qr = &$sub($re);
     bless $qr, $class if length $class;
@@ -215,39 +224,3 @@ sub yaml_load {
 }
 
 1;
-
-__END__
-
-=encoding utf8
-
-=head1 NAME
-
-YAML::Old::Types - Marshall Perl internal data types to/from YAML
-
-=head1 SYNOPSIS
-
-    $::foo = 42;
-    print YAML::Old::Dump(*::foo);
-
-    print YAML::Old::Dump(qr{match me});
-
-=head1 DESCRIPTION
-
-This module has the helper classes for transferring objects,
-subroutines, references, globs, regexps and file handles to and
-from YAML.
-
-=head1 AUTHOR
-
-Ingy döt Net <ingy@cpan.org>
-
-=head1 COPYRIGHT
-
-Copyright (c) 2006, 2008. Ingy döt Net.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-See L<http://www.perl.com/perl/misc/Artistic.html>
-
-=cut

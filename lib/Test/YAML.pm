@@ -1,12 +1,10 @@
 package Test::YAML;
-use Test::Base 0.47 -Base;
+
+use Test::Base -Base;
 use lib 'lib';
 
-our $VERSION = '0.57';
-
-our $YAML = 'YAML::Old';
-
-our @EXPORT = qw(
+our $YAML    = 'YAML';
+our @EXPORT  = qw(
     no_diff
     run_yaml_tests
     run_roundtrip_nyn roundtrip_nyn
@@ -17,12 +15,12 @@ our @EXPORT = qw(
 
 delimiters('===', '+++');
 
-sub Dump() { YAML(Dump => @_) }
-sub Load() { YAML(Load => @_) }
-sub DumpFile() { YAML(DumpFile => @_) }
-sub LoadFile() { YAML(LoadFile => @_) }
+sub Dump     () { YAML(Dump => @_)     }
+sub Load     () { YAML(Load => @_)     }
+sub DumpFile () { YAML(DumpFile => @_) }
+sub LoadFile () { YAML(LoadFile => @_) }
 
-sub YAML() {
+sub YAML () {
     load_yaml_pm();
     my $meth = shift;
     my $code = $YAML->can($meth) or die "$YAML cannot do $meth";
@@ -38,7 +36,7 @@ sub load_yaml_pm {
 sub run_yaml_tests() {
     run {
         my $block = shift;
-        &{_get_function($block)}($block) unless 
+        &{_get_function($block)}($block) unless
           _skip_tests_for_now($block) or
           _skip_yaml_tests($block);
     };
@@ -69,7 +67,7 @@ sub roundtrip_nyn() {
     else {
         pass $block->description . ' (n->y)';
     }
-        
+
     return if exists $block->{no_round_trip} or
         not exists $block->{yaml};
 
@@ -118,13 +116,6 @@ sub dumper() {
     $Data::Dumper::Terse = 1;
     $Data::Dumper::Indent = 1;
     return Data::Dumper::Dumper(@_);
-}
-
-{
-    no warnings;
-    sub XXX {
-        YAML::Base::XXX(@_);
-    }
 }
 
 sub _count_tests() {
@@ -183,7 +174,16 @@ sub _skip_test() {
 
 #-------------------------------------------------------------------------------
 package Test::YAML::Filter;
-use base 'Test::Base::Filter';
+
+use Test::Base::Filter ();
+
+our @ISA = 'Test::Base::Filter';
+
+sub yaml {
+    $self->assert_scalar(@_);
+    require YAML::Old;
+    return YAML::Old::Load(shift);
+}
 
 sub yaml_dump {
     Test::YAML::Dump(@_);
@@ -238,7 +238,7 @@ sub _perl_eval_result_error_warning {
 
 1;
 
-=encoding utf8
+=encoding UTF-8
 
 =head1 NAME
 
@@ -260,10 +260,10 @@ Ingy döt Net <ingy@cpan.org>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2006, 2008. Ingy döt Net.
+Copyright 2001-2014. Ingy döt Net.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 See L<http://www.perl.com/perl/misc/Artistic.html>
 

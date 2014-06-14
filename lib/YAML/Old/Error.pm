@@ -1,18 +1,18 @@
 package YAML::Old::Error;
-use strict; use warnings;
-use YAML::Old::Base; use base 'YAML::Old::Base';
 
-field 'code';
-field 'type' => 'Error';
-field 'line';
-field 'document';
-field 'arguments' => [];
+use YAML::Old::Mo;
+
+has 'code';
+has 'type' => default => sub {'Error'};
+has 'line';
+has 'document';
+has 'arguments' => default => sub {[]};
 
 my ($error_messages, %line_adjust);
 
 sub format_message {
     my $self = shift;
-    my $output = 'YAML::Old ' . $self->type . ': ';
+    my $output = 'YAML ' . $self->type . ': ';
     my $code = $self->code;
     if ($error_messages->{$code}) {
         $code = sprintf($error_messages->{$code}, @{$self->arguments});
@@ -136,7 +136,7 @@ YAML_LOAD_WARN_GLOB_NAME
 YAML_LOAD_WARN_PARSE_CODE
   Couldn't parse Perl code scalar: %s
 YAML_LOAD_WARN_CODE_DEPARSE
-  Won't parse Perl code unless $YAML::Old::LoadCode is set
+  Won't parse Perl code unless $YAML::LoadCode is set
 YAML_EMIT_ERR_BAD_LEVEL
   Internal Error: Bad level detected
 YAML_PARSE_WARN_AMBIGUOUS_TAB
@@ -149,11 +149,11 @@ YAML_LOAD_WARN_GLOB_IO
   Can't load an IO filehandle. Yet!!!
 ...
 
-%line_adjust = map {($_, 1)} 
+%line_adjust = map {($_, 1)}
   qw(YAML_PARSE_ERR_BAD_MAJOR_VERSION
-     YAML_PARSE_WARN_BAD_MINOR_VERSION 
-     YAML_PARSE_ERR_TEXT_AFTER_INDICATOR 
-     YAML_PARSE_ERR_NO_ANCHOR 
+     YAML_PARSE_WARN_BAD_MINOR_VERSION
+     YAML_PARSE_ERR_TEXT_AFTER_INDICATOR
+     YAML_PARSE_ERR_NO_ANCHOR
      YAML_PARSE_ERR_MANY_EXPLICIT
      YAML_PARSE_ERR_MANY_IMPLICIT
      YAML_PARSE_ERR_MANY_ANCHOR
@@ -185,38 +185,7 @@ YAML_LOAD_WARN_GLOB_IO
     );
 
 package YAML::Old::Warning;
-use base 'YAML::Old::Error';
+
+our @ISA = 'YAML::Old::Error';
 
 1;
-
-__END__
-
-=encoding utf8
-
-=head1 NAME
-
-YAML::Old::Error - Error formatting class for YAML::Old modules
-
-=head1 SYNOPSIS
-
-    $self->die('YAML_PARSE_ERR_NO_ANCHOR', $alias);
-    $self->warn('YAML_LOAD_WARN_DUPLICATE_KEY');
-
-=head1 DESCRIPTION
-
-This module provides a C<die> and a C<warn> facility.
-
-=head1 AUTHOR
-
-Ingy döt Net <ingy@cpan.org>
-
-=head1 COPYRIGHT
-
-Copyright (c) 2006, 2008. Ingy döt Net.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-See L<http://www.perl.com/perl/misc/Artistic.html>
-
-=cut

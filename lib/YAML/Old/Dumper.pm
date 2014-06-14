@@ -1,23 +1,24 @@
 package YAML::Old::Dumper;
-use strict; use warnings;
-use YAML::Old::Base;
-use base 'YAML::Old::Dumper::Base';
 
+use YAML::Old::Mo;
+extends 'YAML::Old::Dumper::Base';
+
+use YAML::Old::Dumper::Base;
 use YAML::Old::Node;
 use YAML::Old::Types;
 
 # Context constants
-use constant KEY => 3;
-use constant BLESSED => 4;
+use constant KEY       => 3;
+use constant BLESSED   => 4;
 use constant FROMARRAY => 5;
-use constant VALUE => "\x07YAML\x07VALUE\x07";
+use constant VALUE     => "\x07YAML\x07VALUE\x07";
 
 # Common YAML character sets
 my $ESCAPE_CHAR = '[\\x00-\\x08\\x0b-\\x0d\\x0e-\\x1f]';
-my $LIT_CHAR = '|';    
+my $LIT_CHAR    = '|';
 
 #==============================================================================
-# OO version of Dump. YAML::Old->new->dump($foo); 
+# OO version of Dump. YAML::Old->new->dump($foo);
 sub dump {
     my $self = shift;
     $self->stream('');
@@ -42,7 +43,7 @@ sub dump {
 sub _emit_header {
     my $self = shift;
     my ($node) = @_;
-    if (not $self->use_header and 
+    if (not $self->use_header and
         $self->document == 1
        ) {
         $self->die('YAML_DUMP_ERR_NO_HEADER')
@@ -73,13 +74,13 @@ sub _prewalk {
     # Handle typeglobs
     if ($type eq 'GLOB') {
         $self->transferred->{$node_id} =
-          YAML::Type::glob->yaml_dump($_[0]);
+          YAML::Old::Type::glob->yaml_dump($_[0]);
         $self->_prewalk($self->transferred->{$node_id});
         return;
     }
 
     # Handle regexps
-    if (ref($_[0]) eq 'Regexp') {  
+    if (ref($_[0]) eq 'Regexp') {
         return;
     }
 
@@ -109,12 +110,12 @@ sub _prewalk {
     # Handle code refs
     if ($type eq 'CODE') {
         $self->transferred->{$node_id} = 'placeholder';
-        YAML::Type::code->yaml_dump(
+        YAML::Old::Type::code->yaml_dump(
             $self->dump_code,
-            $_[0], 
+            $_[0],
             $self->transferred->{$node_id}
         );
-        ($class, $type, $node_id) = 
+        ($class, $type, $node_id) =
           $self->node_info(\ $self->transferred->{$node_id}, $stringify);
         $self->{id_refcnt}{$node_id}++;
         return;
@@ -127,7 +128,7 @@ sub _prewalk {
         }
         elsif ($type eq 'SCALAR') {
             $self->transferred->{$node_id} = 'placeholder';
-            YAML::Type::blessed->yaml_dump
+            YAML::Old::Type::blessed->yaml_dump
               ($_[0], $self->transferred->{$node_id});
             ($class, $type, $node_id) =
               $self->node_info(\ $self->transferred->{$node_id}, $stringify);
@@ -135,13 +136,14 @@ sub _prewalk {
             return;
         }
         else {
-            $value = YAML::Type::blessed->yaml_dump($value);
+            $value = YAML::Old::Type::blessed->yaml_dump($value);
         }
         $self->transferred->{$node_id} = $value;
         (undef, $type, $node_id) = $self->node_info($value, $stringify);
     }
 
     # Handle YAML Blessed things
+    require YAML::Old;
     if (defined YAML::Old->global_object()->{blessed_map}{$node_id}) {
         $value = YAML::Old->global_object()->{blessed_map}{$node_id};
         $self->transferred->{$node_id} = $value;
@@ -152,7 +154,7 @@ sub _prewalk {
 
     # Handle hard refs
     if ($type eq 'REF' or $type eq 'SCALAR') {
-        $value = YAML::Type::ref->yaml_dump($value);
+        $value = YAML::Old::Type::ref->yaml_dump($value);
         $self->transferred->{$node_id} = $value;
         (undef, $type, $node_id) = $self->node_info($value, $stringify);
     }
@@ -160,10 +162,10 @@ sub _prewalk {
     # Handle ref-to-glob's
     elsif ($type eq 'GLOB') {
         my $ref_ynode = $self->transferred->{$node_id} =
-          YAML::Type::ref->yaml_dump($value);
+          YAML::Old::Type::ref->yaml_dump($value);
 
-        my $glob_ynode = $ref_ynode->{&VALUE} = 
-          YAML::Type::glob->yaml_dump($$value);
+        my $glob_ynode = $ref_ynode->{&VALUE} =
+          YAML::Old::Type::glob->yaml_dump($$value);
 
         (undef, undef, $node_id) = $self->node_info($glob_ynode, $stringify);
         $self->transferred->{$node_id} = $glob_ynode;
@@ -235,7 +237,7 @@ sub _emit_node {
             $ynode = ynode($self->transferred->{$node_id});
             $tag = defined $ynode ? $ynode->tag->short : '';
             $type = 'SCALAR';
-            (undef, undef, $node_id) = 
+            (undef, undef, $node_id) =
               $self->node_info(
                   \ $self->transferred->{$node_id},
                   $self->stringify
@@ -273,7 +275,7 @@ sub _emit_node {
     return $self->_emit_str("$value");
 }
 
-# A YAML mapping is akin to a Perl hash. 
+# A YAML mapping is akin to a Perl hash.
 sub _emit_mapping {
     my $self = shift;
     my ($value, $tag, $node_id, $context) = @_;
@@ -327,7 +329,7 @@ sub _emit_mapping {
     else {
         @keys = keys %$value;
     }
-    # Force the YAML::Old::VALUE ('=') key to sort last.
+    # Force the YAML::VALUE ('=') key to sort last.
     if (exists $value->{&VALUE}) {
         for (my $i = 0; $i < @keys; $i++) {
             if ($keys[$i] eq &VALUE) {
@@ -354,7 +356,7 @@ sub _emit_sequence {
     $self->{stream} .= " !$tag" if $tag;
 
     return ($self->{stream} .= " []\n") if @$value == 0;
-        
+
     $self->{stream} .= "\n"
       unless $self->headless && not($self->headless(0));
 
@@ -426,7 +428,7 @@ sub _emit_str {
     while (1) {
         $self->_emit($sf),
         $self->_emit_plain($_[0]),
-        $self->_emit($ef), last 
+        $self->_emit($ef), last
           if not defined $_[0];
         $self->_emit($sf, '=', $ef), last
           if $_[0] eq VALUE;
@@ -439,7 +441,7 @@ sub _emit_str {
             $self->_emit_block($LIT_CHAR, $_[0]),
             $self->_emit($eb), last
               if $self->use_block;
-              Carp::cluck "[YAML::Old] \$UseFold is no longer supported"
+              Carp::cluck "[YAML] \$UseFold is no longer supported"
               if $self->use_fold;
             $self->_emit($sf),
             $self->_emit_double($_[0]),
@@ -483,6 +485,7 @@ sub is_valid_plain {
     return 0 if $_[0] =~ /\s#/;
     return 0 if $_[0] =~ /\:(\s|$)/;
     return 0 if $_[0] =~ /[\s\|\>]$/;
+    return 0 if $_[0] eq '-';
     return 1;
 }
 
@@ -552,38 +555,3 @@ sub escape {
 }
 
 1;
-
-__END__
-
-=encoding utf8
-
-=head1 NAME
-
-YAML::Old::Dumper - YAML::Old class for dumping Perl objects to YAML
-
-=head1 SYNOPSIS
-
-    use YAML::Old::Dumper;
-    my $dumper = YAML::Old::Dumper->new;
-    $dumper->indent_width(4);
-    print $dumper->dump({foo => 'bar'});
-
-=head1 DESCRIPTION
-
-YAML::Old::Dumper is the module that YAML::Old uses to serialize Perl objects to
-YAML. It is fully object oriented and usable on its own.
-
-=head1 AUTHOR
-
-Ingy döt Net <ingy@cpan.org>
-
-=head1 COPYRIGHT
-
-Copyright (c) 2006, 2008. Ingy döt Net.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-See L<http://www.perl.com/perl/misc/Artistic.html>
-
-=cut
