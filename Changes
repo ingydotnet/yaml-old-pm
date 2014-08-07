@@ -1,4 +1,9 @@
 ---
+version: 0.97
+date:    Thu Aug  7 00:32:03 PDT 2014
+changes:
+- Fix bad encoding in Pod
+---
 version: 0.96
 date:    Wed Aug  6 17:54:56 PDT 2014
 changes:
