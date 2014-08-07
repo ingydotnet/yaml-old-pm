@@ -1,7 +1,7 @@
 =meta: 0.0.1
 
 name: YAML-Old
-version: 0.95
+version: 0.96
 abstract: Old YAML.pm Legacy Code
 homepage: http://yaml.org
 
@@ -18,17 +18,15 @@ author:
 requires:
   perl: 5.8.1
 
-devel:
-  git: https://github.com/ingydotnet/yaml-pm
-  bug: https://github.com/ingydotnet/yaml-pm/issues
-  irc: irc.freenode.net#yaml
+test:
+  requires:
+    Test::YAML: 0.99
 
-=cpan:
-  include_testbase: true
+devel:
+  git: https://github.com/ingydotnet/yaml-old-pm
+  bug: https://github.com/ingydotnet/yaml-old-pm/issues
+  irc: irc.perl.org#yaml
 
 =travis:
   type: perl
-  testbase: true
-  test:
-    requires:
-      Spiffy: 0
+  irc: irc.perl.org#yaml

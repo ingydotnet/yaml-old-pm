@@ -1,4 +1,9 @@
 ---
+version: 0.96
+date:    Wed Aug  6 17:54:56 PDT 2014
+changes:
+- Switch to external YAML-Test
+---
 version: 0.95
 date:    Thu Jul 17 00:00:34 PDT 2014
 changes:
