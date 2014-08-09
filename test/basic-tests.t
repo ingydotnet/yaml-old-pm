@@ -4,6 +4,11 @@ use lib dirname(__FILE__);
 
 use TestYAML tests => 4;
 
+sub yaml {
+    require YAML::Old;
+    return YAML::Old::Load(shift);
+}
+
 filters {
     yaml => [yaml => 'dumper'],
     perl => [strict => eval => 'dumper'],

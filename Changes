@@ -1,4 +1,9 @@
 ---
+version: 0.98
+date:    Fri Aug  8 19:00:04 PDT 2014
+changes:
+- Fixed a test that was still using YAML.pm
+---
 version: 0.97
 date:    Thu Aug  7 00:32:03 PDT 2014
 changes:
