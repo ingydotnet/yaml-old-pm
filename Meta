@@ -1,19 +1,25 @@
-=meta: 0.0.1
+=meta: 0.0.2
 
 name: YAML-Old
-version: 0.102
+version: 0.103
 abstract: Old YAML.pm Legacy Code
 homepage: http://yaml.org
-
+language: perl
 license: perl
-copyright: 2001-2014. Ingy döt Net.
+copyright: 2001-2014
+
 author:
   name: Ingy döt Net
   email: ingy@cpan.org
+  homepage: http://ingy.net
   github: ingydotnet
   twitter: ingydotnet
   freenode: ingy
-  homepage: http://ingy.net
+
+devel:
+  git: https://github.com/ingydotnet/yaml-old-pm
+  bug: https://github.com/ingydotnet/yaml-old-pm/issues
+  irc: irc.perl.org#yaml
 
 requires:
   perl: 5.8.1
@@ -21,12 +27,3 @@ requires:
 test:
   requires:
     Test::YAML: 0.99
-
-devel:
-  git: https://github.com/ingydotnet/yaml-old-pm
-  bug: https://github.com/ingydotnet/yaml-old-pm/issues
-  irc: irc.perl.org#yaml
-
-=travis:
-  type: perl
-  irc: irc.perl.org#yaml
