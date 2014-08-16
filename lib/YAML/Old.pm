@@ -1,6 +1,6 @@
-use 5.008001;
+use strict; use warnings;
 package YAML::Old;
-our $VERSION = '0.103';
+our $VERSION = '0.104';
 
 use YAML::Old::Mo;
 
