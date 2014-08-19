@@ -41,8 +41,8 @@ use YAML::Old::Marshall 'random/object:bar.baz';
 #-------------------------------------------------------------------------------
 package Baz::Foo;
 BEGIN {
-	require TestYAMLBase;
-	@Bar::Foo::ISA = 'TestYAMLBase';
+    require TestYAMLBase;
+    @Bar::Foo::ISA = 'TestYAMLBase';
 }
 use YAML::Old::Marshall;
 
