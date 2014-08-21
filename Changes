@@ -1,4 +1,9 @@
 ---
+version: 1.07
+date:    Thu Aug 21 13:57:48 PDT 2014
+changes:
+- Fix VERSION error. 1.06, not 0.106
+---
 version: 0.106
 date:    Tue Aug 19 16:38:40 PDT 2014
 changes:
