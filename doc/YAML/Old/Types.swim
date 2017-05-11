@@ -6,9 +6,9 @@ Marshall Perl internal data types to/from YAML
 = Synopsis
 
   $::foo = 42;
-  print YAML::Dump(*::foo);
+  print YAML::Old::Dump(*::foo);
 
-  print YAML::Dump(qr{match me});
+  print YAML::Old::Dump(qr{match me});
 
 = Description
 

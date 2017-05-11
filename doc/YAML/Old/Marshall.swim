@@ -1,20 +1,21 @@
-YAML::Dumper::Base
-==================
+YAML::Marshall
+==============
 
-Base class for YAML Dumper classes
+YAML marshalling class you can mixin to your classes
 
 = Synopsis
 
-  package YAML::Dumper::Something;
-  use YAML::Dumper::Base -base;
+  package Bar;
+  use Foo -base;
+  use YAML::Old::Marshall -mixin;
 
 = Description
 
-YAML::Dumper::Base is a base class for creating YAML dumper classes.
+For classes that want to handle their own YAML serialization.
 
 = Author
 
-Ingy döt Net <ingy@cpan.org>
+ingy döt Net <ingy@cpan.org>
 
 = Copyright
 

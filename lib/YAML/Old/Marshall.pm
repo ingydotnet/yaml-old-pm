@@ -1,7 +1,7 @@
 use strict; use warnings;
-package YAML::Marshall;
+package YAML::Old::Marshall;
 
-use YAML::Node ();
+use YAML::Old::Node ();
 
 sub import {
     my $class = shift;
@@ -36,12 +36,12 @@ sub yaml_load {
 
 sub yaml_node {
     shift;
-    YAML::Node->new(@_);
+    YAML::Old::Node->new(@_);
 }
 
 sub yaml_ynode {
     shift;
-    YAML::Node::ynode(@_);
+    YAML::Old::Node::ynode(@_);
 }
 
 1;

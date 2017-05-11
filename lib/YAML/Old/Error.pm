@@ -1,6 +1,6 @@
-package YAML::Error;
+package YAML::Old::Error;
 
-use YAML::Mo;
+use YAML::Old::Mo;
 
 has 'code';
 has 'type' => default => sub {'Error'};
@@ -12,7 +12,7 @@ my ($error_messages, %line_adjust);
 
 sub format_message {
     my $self = shift;
-    my $output = 'YAML ' . $self->type . ': ';
+    my $output = 'YAML::Old ' . $self->type . ': ';
     my $code = $self->code;
     if ($error_messages->{$code}) {
         $code = sprintf($error_messages->{$code}, @{$self->arguments});
@@ -54,7 +54,7 @@ YAML_PARSE_ERR_BAD_ANCHOR
 YAML_DUMP_ERR_INVALID_INDENT
   Invalid Indent width specified: '%s'
 YAML_LOAD_USAGE
-  usage: YAML::Load($yaml_stream_scalar)
+  usage: YAML::Old::Load($yaml_stream_scalar)
 YAML_PARSE_ERR_BAD_NODE
   Can't parse node
 YAML_PARSE_ERR_BAD_EXPLICIT
@@ -184,8 +184,8 @@ YAML_LOAD_WARN_GLOB_IO
      YAML_PARSE_ERR_ZERO_INDENT
     );
 
-package YAML::Warning;
+package YAML::Old::Warning;
 
-our @ISA = 'YAML::Error';
+our @ISA = 'YAML::Old::Error';
 
 1;

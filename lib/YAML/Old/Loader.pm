@@ -1,11 +1,11 @@
-package YAML::Loader;
+package YAML::Old::Loader;
 
-use YAML::Mo;
-extends 'YAML::Loader::Base';
+use YAML::Old::Mo;
+extends 'YAML::Old::Loader::Base';
 
-use YAML::Loader::Base;
-use YAML::Types;
-use YAML::Node;
+use YAML::Old::Loader::Base;
+use YAML::Old::Types;
+use YAML::Old::Node;
 
 # Context constants
 use constant LEAF       => 1;
@@ -277,7 +277,7 @@ sub _parse_explicit {
     }
     if ($explicit =~ m{^!?perl/(glob|regexp|code)(?:\:(\w(\w|\:\:)*)?)?$}) {
         ($type, $class) = (($1 || ''), ($2 || ''));
-        my $type_class = "YAML::Type::$type";
+        my $type_class = "YAML::Old::Type::$type";
         no strict 'refs';
         if ($type_class->can('yaml_load')) {
             return $type_class->yaml_load($node, $class, $self);
@@ -292,8 +292,8 @@ sub _parse_explicit {
           ) {
         $class = $YAML::TagClass->{$explicit} || $2;
         if ($class->can('yaml_load')) {
-            require YAML::Node;
-            return $class->yaml_load(YAML::Node->new($node, $explicit));
+            require YAML::Old::Node;
+            return $class->yaml_load(YAML::Old::Node->new($node, $explicit));
         }
         else {
             if (ref $node) {
@@ -305,8 +305,8 @@ sub _parse_explicit {
         }
     }
     elsif (ref $node) {
-        require YAML::Node;
-        return YAML::Node->new($node, $explicit);
+        require YAML::Old::Node;
+        return YAML::Old::Node->new($node, $explicit);
     }
     else {
         # XXX This is likely wrong. Failing test:
@@ -319,7 +319,7 @@ sub _parse_explicit {
 sub _parse_mapping {
     my $self = shift;
     my ($anchor) = @_;
-    my $mapping = $self->preserve ? YAML::Node->new({}) : {};
+    my $mapping = $self->preserve ? YAML::Old::Node->new({}) : {};
     $self->anchor2node->{$anchor} = $mapping;
     my $key;
     while (not $self->done and $self->indent == $self->offset->[$self->level]) {

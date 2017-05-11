@@ -1,5 +1,6 @@
 use lib 'inc';
 use Test::YAML tests => 10;
+$Test::YAML::YAML = 'YAML::Old';
 
 no_diff;
 

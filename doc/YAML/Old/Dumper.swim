@@ -5,14 +5,14 @@ YAML class for dumping Perl objects to YAML
 
 = Synopsis
 
-  use YAML::Dumper;
-  my $dumper = YAML::Dumper->new;
+  use YAML::Old::Dumper;
+  my $dumper = YAML::Old::Dumper->new;
   $dumper->indent_width(4);
   print $dumper->dump({foo => 'bar'});
 
 = Description
 
-YAML::Dumper is the module that YAML.pm used to serialize Perl objects to
+YAML::Old::Dumper is the module that YAML::Old used to serialize Perl objects to
 YAML. It is fully object oriented and usable on its own.
 
 = Author

@@ -1,7 +1,7 @@
 use strict;
 use lib -e 't' ? 't' : 'test';
 use TestYAML tests => 16;
-use YAML::Dumper;
+use YAML::Old::Dumper;
 
 package StrIngy;
 use overload '""', sub { 'A Stringy String' };
@@ -34,7 +34,7 @@ sub eval_perl {
 }
 
 sub get_info {
-    my $dumper = YAML::Dumper->new;
+    my $dumper = YAML::Old::Dumper->new;
     join ';', map {
         defined($_) ? $_ : 'undef'
     } $dumper->node_info(@_);

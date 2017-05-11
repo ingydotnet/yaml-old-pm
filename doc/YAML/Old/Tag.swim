@@ -1,17 +1,15 @@
-YAML::Marshall
-==============
+YAML::Tag
+=========
 
-YAML marshalling class you can mixin to your classes
+Tag URI object class for YAML
 
 = Synopsis
 
-  package Bar;
-  use Foo -base;
-  use YAML::Marshall -mixin;
+  use YAML::Old::Tag;
 
 = Description
 
-For classes that want to handle their own YAML serialization.
+Used by YAML::Old::Node.
 
 = Author
 

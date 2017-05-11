@@ -12,7 +12,7 @@ BEGIN {
 use IO::Pipe;
 use IO::File;
 use TestYAML tests => 6;
-use YAML qw/DumpFile LoadFile/;;
+use YAML::Old qw/DumpFile LoadFile/;;
 
 my $testdata = 'El país es medible. La patria es del tamaño del corazón de quien la quiere.';
 

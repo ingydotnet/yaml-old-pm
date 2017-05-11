@@ -1,6 +1,6 @@
 use strict;
 use Test::More tests => 1;
-use YAML;
+use YAML::Old;
 
 local $YAML::Preserve = 1;
 
@@ -34,8 +34,8 @@ b: b
 a: a
 ...
 
-my $data = YAML::Load($yaml);
-my $dump = YAML::Dump($data);
+my $data = YAML::Old::Load($yaml);
+my $dump = YAML::Old::Dump($data);
 cmp_ok($dump, 'eq', $yaml, "Roundtrip with Preserve option");
 
 done_testing;

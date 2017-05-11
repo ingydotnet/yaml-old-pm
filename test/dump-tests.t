@@ -122,7 +122,7 @@ bless [map "$_",42..45], 'Foo::Bar'
 
 ===
 +++ perl
-my $yn = YAML::Node->new({}, 'foo.com/bar');
+my $yn = YAML::Old::Node->new({}, 'foo.com/bar');
 $yn->{foo} = 'bar';
 $yn->{bar} = 'baz';
 $yn->{baz} = 'foo';
@@ -135,7 +135,7 @@ baz: foo
 
 ===
 +++ perl
-use YAML::Node;
+use YAML::Old::Node;
 +++ no_round_trip
 +++ perl
 my $a = '';
@@ -153,7 +153,7 @@ bless \$a, 'Foo::Bark';
 +++ no_round_trip
 XXX: probably a YAML.pm bug
 +++ perl
-&YAML::VALUE
+&YAML::Old::VALUE
 +++ yaml
 --- =
 
@@ -202,7 +202,7 @@ package main;
 +++ no_round_trip
 +++ perl
 my $foo = {qw(apple 1 banana 2 carrot 3 date 4)};
-YAML::Bless($foo)->keys([qw(banana apple date)]);
+YAML::Old::Bless($foo)->keys([qw(banana apple date)]);
 $foo
 +++ yaml
 ---
@@ -213,10 +213,10 @@ date: 4
 ===
 +++ no_round_trip
 +++ perl
-use YAML::Node;
+use YAML::Old::Node;
 my $foo = {qw(apple 1 banana 2 carrot 3 date 4)};
-my $yn = YAML::Node->new($foo);
-YAML::Bless($foo, $yn)->keys([qw(apple)]); # red herring
+my $yn = YAML::Old::Node->new($foo);
+YAML::Old::Bless($foo, $yn)->keys([qw(apple)]); # red herring
 ynode($yn)->keys([qw(banana date)]);
 $foo
 +++ yaml
@@ -229,12 +229,12 @@ date: 4
 XXX: probably a test driver bug
 +++ perl
 my $joe_random_global = {qw(apple 1 banana 2 carrot 3 date 4)};
-YAML::Bless($joe_random_global, 'TestBless');
+YAML::Old::Bless($joe_random_global, 'TestBless');
 return [$joe_random_global, $joe_random_global];
 package TestBless;
-use YAML::Node;
+use YAML::Old::Node;
 sub yaml_dump {
-    my $yn = YAML::Node->new($_[0]);
+    my $yn = YAML::Old::Node->new($_[0]);
     ynode($yn)->keys([qw(apple pear carrot)]);
     $yn->{pear} = $yn;
     return $yn;
@@ -250,10 +250,10 @@ sub yaml_dump {
 ===
 +++ no_round_trip
 +++ perl
-use YAML::Node;
+use YAML::Old::Node;
 my $joe_random_global = {qw(apple 1 banana 2 carrot 3 date 4)};
-YAML::Bless($joe_random_global);
-my $yn = YAML::Blessed($joe_random_global);
+YAML::Old::Bless($joe_random_global);
+my $yn = YAML::Old::Blessed($joe_random_global);
 delete $yn->{banana};
 $joe_random_global
 +++ yaml
@@ -377,8 +377,8 @@ $a = \\\\\\\\"foo"; $b = $$$$$a;
 +++ no_round_trip
 XXX an AutoBless feature could make this rt
 +++ perl
-$a = YAML::Node->new({qw(a 1 b 2 c 3 d 4)}, 'ingy.com/foo');
-YAML::Node::ynode($a)->keys([qw(d b a)]);
+$a = YAML::Old::Node->new({qw(a 1 b 2 c 3 d 4)}, 'ingy.com/foo');
+YAML::Old::Node::ynode($a)->keys([qw(d b a)]);
 $a;
 +++ yaml
 --- !ingy.com/foo

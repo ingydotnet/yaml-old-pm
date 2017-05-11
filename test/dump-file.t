@@ -10,7 +10,7 @@ BEGIN {
 }
 use TestYAML tests => 3;
 
-use YAML 'DumpFile';
+use YAML::Old 'DumpFile';
 
 ok defined &DumpFile,
     'Dumpfile exported';

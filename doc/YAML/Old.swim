@@ -2,7 +2,7 @@
 
 = Note
 
-This module has been released to CPAN as [YAML::Old], and soon YAML.pm will be
+[YAML::Old] is the old legacy [YAML] code repackaged, and soon YAML.pm will be
 changed to just be a frontend interface module for all the various Perl YAML
 implementation modules, including YAML::Old.
 
@@ -11,15 +11,13 @@ please consider switching to [YAML::XS]. It is by far the best Perl module for
 YAML at this time. It requires that you have a C compiler, since it is written
 in C.
 
-If you really need to use this version of YAML.pm it will always be available
-as YAML::Old.
-
-The rest of this documentation is left unchanged, until YAML.pm is switched
-over to the new UI-only version.
+This document was converted from the old doc for YAML.pm and attempted to be
+made for YAML::Old. If some of the wording seems awkward, that is probably why.
+At some point we may rewrite this. Better yet... patches welcome!
 
 = Synopsis
 
-  use YAML;
+  use YAML::Old;
 
   # Load a YAML stream of 3 YAML documents into Perl data structures.
   my ($hashref, $arrayref, $string) = Load(<<'...');
@@ -37,10 +35,10 @@ over to the new UI-only version.
   - Oren Ben-Kiki
   - Ingy döt Net
   --- >
-  You probably think YAML stands for "Yet Another Markup Language". It
-  ain't! YAML is really a data serialization language. But if you want
-  to think of it as a markup, that's OK with me. A lot of people try
-  to use XML as a serialization format.
+  You probably think YAML stands for "Yet Another Markup Language". It ain't!
+  YAML is really a data serialization language. But if you want to think of it
+  as a markup, that's OK with me. A lot of people try to use XML as a
+  serialization format.
 
   "YAML" is catchy and fun to say. Try it. "YAML, YAML, YAML!!!"
   ...
@@ -48,13 +46,13 @@ over to the new UI-only version.
   # Dump the Perl data structures back into YAML.
   print Dump($string, $arrayref, $hashref);
 
-  # YAML::Dump is used the same way you'd use Data::Dumper::Dumper
+  # YAML::Old::Dump is used the same way you'd use Data::Dumper::Dumper
   use Data::Dumper;
   print Dumper($string, $arrayref, $hashref);
 
 = Description
 
-The YAML.pm module implements a YAML Loader and Dumper based on the YAML 1.0
+The YAML::Old module implements a YAML Loader and Dumper based on the YAML 1.0
 specification. http://www.yaml.org/spec/
 
 YAML is a generic data serialization language that is optimized for human
@@ -83,10 +81,10 @@ For information on the YAML syntax, please refer to the YAML specification.
 - YAML is multilingual.
 
   Yes, YAML supports Unicode. But I'm actually referring to programming
-  languages. YAML was designed to meet the serialization needs of Perl,
-  Python, Ruby, Tcl, PHP, Javascript and Java. It was also designed to be
-  interoperable between those languages. That means YAML serializations
-  produced by Perl can be processed by Python.
+  languages. YAML was designed to meet the serialization needs of Perl, Python,
+  Ruby, Tcl, PHP, Javascript and Java. It was also designed to be interoperable
+  between those languages. That means YAML serializations produced by Perl can
+  be processed by Python.
 
 - YAML is taint safe.
 
@@ -105,7 +103,7 @@ For information on the YAML syntax, please refer to the YAML specification.
   popular current modules: Data::Dumper, Storable, XML::Dumper and
   Data::Denter.
 
-  YAML.pm also has the ability to handle code (subroutine) references and
+  YAML::Old also has the ability to handle code (subroutine) references and
   typeglobs. (Still experimental) These features are not found in Perl's other
   serialization modules.
 
@@ -121,14 +119,13 @@ For information on the YAML syntax, please refer to the YAML specification.
 
 = YAML Implementations in Perl
 
-This module, YAML.pm, is really just the interface module for YAML modules
-written in Perl. The basic interface for YAML consists of two functions:
-`Dump` and `Load`. The real work is done by the modules [YAML::Dumper] and
-[YAML::Loader].
+This module, YAML::Old, is really just the interface module for YAML modules
+written in Perl. The basic interface for YAML consists of two functions: `Dump`
+and `Load`. The real work is done by the modules [YAML::Old::Dumper] and
+[YAML::Old::Loader].
 
-Different YAML module distributions can be created by subclassing YAML.pm and
-YAML::Loader and YAML::Dumper. For example, YAML-Simple consists of
-YAML::Simple YAML::Dumper::Simple and YAML::Loader::Simple.
+Different YAML module distributions can be created by subclassing
+YAML::Old::Old and YAML::Old::Loader and YAML::Old::Dumper.
 
 Why would there be more than one implementation of YAML? Well, despite YAML's
 offering of being a simple data format, YAML is actually very deep and
@@ -137,12 +134,10 @@ task.
 
 For this reason I am currently working on 3 different YAML implementations.
 
-- YAML
+- YAML::Old
 
-  The main YAML distribution will keeping evolving to support the entire YAML
-  specification in pure Perl. This may not be the fastest or most stable
-  module though. Currently, YAML.pm has lots of known bugs. It is mostly a
-  great tool for dumping Perl data structures to a readable form.
+  Currently, YAML::Old has lots of known bugs. It is mostly a great tool for
+  dumping Perl data structures to a readable form.
 
 - YAML::Tiny
 
@@ -158,25 +153,25 @@ For this reason I am currently working on 3 different YAML implementations.
   own. It will also require C compilation.
 
   NOTE: Audrey Tang has actually completed this module and it works great and
-  is 10 times faster than YAML.pm.
+  is 10 times faster than YAML::Old.
 
 In the future, there will likely be even more YAML modules. Remember,
 people other than Ingy are allowed to write YAML modules!
 
 = Functional Usage
 
-YAML is completely OO under the hood. Still it exports a few useful top level
-functions so that it is dead simple to use. These functions just do the OO
-stuff for you. If you want direct access to the OO API see the documentation
-for YAML::Dumper and YAML::Loader.
+YAML::Old is completely OO under the hood. Still it exports a few useful top
+level functions so that it is dead simple to use. These functions just do the
+OO stuff for you. If you want direct access to the OO API see the documentation
+for YAML::Old::Dumper and YAML::Old::Loader.
 
 == Exported Functions
 
-The following functions are exported by YAML.pm by default. The reason they
+The following functions are exported by YAML::Old by default. The reason they
 are exported is so that YAML works much like Data::Dumper. If you don't want
-functions to be imported, just use YAML with an empty import list:
+functions to be imported, just use YAML::Old with an empty import list:
 
-  use YAML ();
+  use YAML::Old ();
 
 - Dump(list-of-Perl-data-structures)
 
@@ -197,13 +192,13 @@ functions to be imported, just use YAML with an empty import list:
 These functions are not exported by default but you can request them in an
 import list like this:
 
-  use YAML qw'freeze thaw Bless';
+  use YAML::Old qw'freeze thaw Bless';
 
 - freeze() and thaw()
 
-  Aliases to Dump() and Load() for Storable fans. This will also allow YAML.pm
-  to be plugged directly into modules like POE.pm, that use the freeze/thaw
-  API for internal serialization.
+  Aliases to Dump() and Load() for Storable fans. This will also allow
+  YAML::Old to be plugged directly into modules like POE.pm, that use the
+  freeze/thaw API for internal serialization.
 
 - DumpFile(filepath, list)
 
@@ -216,7 +211,7 @@ import list like this:
 - Bless(perl-node, [yaml-node | class-name])
 
   Associate a normal Perl node, with a yaml node. A yaml node is an object tied
-  to the YAML::Node class. The second argument is either a yaml node that
+  to the YAML::Old::Node class. The second argument is either a yaml node that
   you've already created or a class (package) name that supports a
   `yaml_dump()` function. A `yaml_dump()` function should take a perl node and
   return a yaml node. If no second argument is provided, Bless will create a
@@ -227,7 +222,7 @@ import list like this:
   keys, but you only want to dump two of them. Furthermore the keys must be
   dumped in a certain order. Here's how you do that:
 
-    use YAML qw(Dump Bless);
+    use YAML::Old qw(Dump Bless);
     $hash = {apple => 'good', banana => 'bad', cauliflower => 'ugly'};
     print Dump $hash;
     Bless($hash)->keys(['banana', 'apple']);
@@ -244,11 +239,11 @@ import list like this:
     apple: good
 
   Bless returns the tied part of a yaml-node, so that you can call the
-  YAML::Node methods. This is the same thing that YAML::Node::ynode() returns.
-  So another way to do the above example is:
+  YAML::Old::Node methods. This is the same thing that YAML::Old::Node::ynode()
+  returns.  So another way to do the above example is:
 
-    use YAML qw(Dump Bless);
-    use YAML::Node;
+    use YAML::Old qw(Dump Bless);
+    use YAML::Old::Node;
     $hash = {apple => 'good', banana => 'bad', cauliflower => 'ugly'};
     print Dump $hash;
     Bless($hash);
@@ -267,8 +262,8 @@ import list like this:
 
 = Global Options
 
-YAML options are set using a group of global variables in the YAML
-namespace. This is similar to how Data::Dumper works.
+YAML::Old options are set using a group of global variables in the YAML
+namespace (NOT the YAML::Old namespace).
 
 For example, to change the indentation width, do something like:
 
@@ -276,15 +271,15 @@ For example, to change the indentation width, do something like:
 
 The current options are:
 
-- DumperClass
+- `$YAML::DumperClass`
 
   You can override which module/class YAML uses for Dumping data.
 
-- LoaderClass
+- `$YAML::LoaderClass`
 
   You can override which module/class YAML uses for Loading data.
 
-- Indent
+- `$YAML::Indent`
 
   This is the number of space characters to use for each indentation level
   when doing a Dump(). The default is 2.
@@ -293,75 +288,75 @@ The current options are:
   level. So if you are editing YAML by hand feel free to do it anyway that
   looks pleasing to you; just be consistent for a given level.
 
-- SortKeys
+- `$YAML::SortKeys`
 
   Default is 1. (true)
 
-  Tells YAML.pm whether or not to sort hash keys when storing a document.
+  Tells YAML::Old whether or not to sort hash keys when storing a document.
 
-  YAML::Node objects can have their own sort order, which is usually what you
-  want. To override the YAML::Node order and sort the keys anyway, set
+  YAML::Old::Node objects can have their own sort order, which is usually what
+  you want. To override the YAML::Old::Node order and sort the keys anyway, set
   SortKeys to 2.
 
-- Stringify
+- `$YAML::Stringify`
 
   Default is 0. (false)
 
   Objects with string overloading should honor the overloading and dump the
   stringification of themselves, rather than the actual object's guts.
 
-- Numify
+- `$YAML::Numify`
 
   Default is 0. (false)
 
   Values that look like numbers (integers, floats) will be numified when
   loaded.
 
-- UseHeader
+- `$YAML::UseHeader`
 
   Default is 1. (true)
 
-  This tells YAML.pm whether to use a separator string for a Dump operation.
+  This tells YAML::Old whether to use a separator string for a Dump operation.
   This only applies to the first document in a stream.  Subsequent documents
   must have a YAML header by definition.
 
-- UseVersion
+- `$YAML::UseVersion`
 
   Default is 0. (false)
 
-  Tells YAML.pm whether to include the YAML version on the separator/header.
+  Tells YAML::Old whether to include the YAML version on the separator/header.
 
     --- %YAML:1.0
 
-- AnchorPrefix
+- `$YAML::AnchorPrefix`
 
   Default is ''.
 
-  Anchor names are normally numeric. YAML.pm simply starts with '1' and
+  Anchor names are normally numeric. YAML::Old simply starts with '1' and
   increases by one for each new anchor. This option allows you to specify a
   string to be prepended to each anchor number.
 
-- UseCode
+- `$YAML::UseCode`
 
   Setting the UseCode option is a shortcut to set both the DumpCode and
-  LoadCode options at once. Setting UseCode to '1' tells YAML.pm to dump Perl
+  LoadCode options at once. Setting UseCode to '1' tells YAML::Old to dump Perl
   code references as Perl (using B::Deparse) and to load them back into memory
   using eval(). The reason this has to be an option is that using eval() to
   parse untrusted code is, well, untrustworthy.
 
-- DumpCode
+- `$YAML::DumpCode`
 
-  Determines if and how YAML.pm should serialize Perl code references. By
-  default YAML.pm will dump code references as dummy placeholders (much like
+  Determines if and how YAML::Old should serialize Perl code references. By
+  default YAML::Old will dump code references as dummy placeholders (much like
   Data::Dumper). If DumpCode is set to '1' or 'deparse', code references will
   be dumped as actual Perl code.
 
-  DumpCode can also be set to a subroutine reference so that you can write
-  your own serializing routine. YAML.pm passes you the code ref. You pass back
-  the serialization (as a string) and a format indicator. The format indicator
-  is a simple string like: 'deparse' or 'bytecode'.
+  DumpCode can also be set to a subroutine reference so that you can write your
+  own serializing routine. YAML::Old passes you the code ref. You pass back the
+  serialization (as a string) and a format indicator. The format indicator is a
+  simple string like: 'deparse' or 'bytecode'.
 
-- LoadCode
+- `$YAML::LoadCode`
 
   LoadCode is the opposite of DumpCode. It tells YAML if and how to
   deserialize code references. When set to '1' or 'deparse' it will use
@@ -369,25 +364,25 @@ The current options are:
   where your YAML has been.
 
   LoadCode can also be set to a subroutine reference so that you can write
-  your own deserializing routine. YAML.pm passes the serialization (as a
+  your own deserializing routine. YAML::Old passes the serialization (as a
   string) and a format indicator. You pass back the code reference.
 
-- Preserve
+- `$YAML::Preserve`
 
-  When set to true, this option tells the Loader to load hashes into YAML::Node
-  objects. These are tied hashes. This has the effect of remembering the key
-  order, thus it will be preserved when the hash is dumped again. See
-  [YAML::Node] for more information.
+  When set to true, this option tells the Loader to load hashes into
+  YAML::Old::Node objects. These are tied hashes. This has the effect of
+  remembering the key order, thus it will be preserved when the hash is dumped
+  again. See [YAML::Old::Node] for more information.
 
-- UseBlock
+- `$YAML::UseBlock`
 
-  YAML.pm uses heuristics to guess which scalar style is best for a given
+  YAML::Old uses heuristics to guess which scalar style is best for a given
   node. Sometimes you'll want all multiline scalars to use the 'block' style.
   If so, set this option to 1.
 
   NOTE: YAML's block style is akin to Perl's here-document.
 
-- UseFold
+- `$YAML::UseFold`
 
   If you want to force YAML to use the 'folded' style for all multiline
   scalars, then set $UseFold to 1.
@@ -395,7 +390,7 @@ The current options are:
   NOTE: YAML's folded style is akin to the way HTML folds text, except
   smarter.
 
-- UseAliases
+- `$YAML::UseAliases`
 
   YAML has an alias mechanism such that any given structure in memory gets
   serialized once. Any other references to that structure are serialized only
@@ -412,7 +407,7 @@ The current options are:
   *will* cause Dump() to run in an endless loop, chewing up your computers
   memory. You have been warned.
 
-- CompressSeries
+- `$YAML::CompressSeries`
 
   Default is 1.
 
@@ -431,7 +426,7 @@ The current options are:
   Since this output is usually more desirable, this option is turned on by
   default.
 
-- QuoteNumericStrings
+- `$YAML::QuoteNumericStrings`
 
   Default is 0. (false)
 
@@ -450,12 +445,11 @@ It is important to remember that although YAML is heavily influenced by Perl
 and Python, it is a language in its own right, not merely just a
 representation of Perl structures.
 
-YAML has three constructs that are conspicuously similar to Perl's hash,
-array, and scalar. They are called mapping, sequence, and string respectively.
-By default, they do what you would expect. But each instance may have an
-explicit or implicit tag (type) that makes it behave differently. In this
-manner, YAML can be extended to represent Perl's Glob or Python's tuple, or
-Ruby's Bigint.
+YAML has three constructs that are conspicuously similar to Perl's hash, array,
+and scalar. They are called mapping, sequence, and string respectively. By
+default, they do what you would expect. But each instance may have an explicit
+or implicit tag (type) that makes it behave differently. In this manner, YAML
+can be extended to represent Perl's Glob or Python's tuple, or Ruby's Bigint.
 
 - stream
 
@@ -513,8 +507,8 @@ Ruby's Bigint.
 
 - collection
 
-  A collection is the generic term for a YAML data grouping. YAML has two
-  types of collections: mappings and sequences. (Similar to hashes and arrays)
+  A collection is the generic term for a YAML data grouping. YAML has two types
+  of collections: mappings and sequences. (Similar to hashes and arrays)
 
 - mapping
 
@@ -602,7 +596,7 @@ Ruby's Bigint.
 
   A YAML processor has four stages: parse, load, dump, emit.
 
-  A parser parses a YAML stream. YAML.pm's Load() function contains a parser.
+  A parser parses a YAML stream. YAML::Old's Load() function contains a parser.
 
 - loader
 
@@ -618,9 +612,9 @@ Ruby's Bigint.
 
   The emitter takes info from the dumper and turns it into a YAML stream.
 
-  NOTE: In YAML.pm the parser/loader and the dumper/emitter code are currently
-  very closely tied together. In the future they may be broken into separate
-  stages.
+  NOTE: In YAML::Old the parser/loader and the dumper/emitter code are
+  currently very closely tied together. In the future they may be broken into
+  separate stages.
 
 For more information please refer to the immensely helpful YAML specification
 available at [http://www.yaml.org/spec/].
@@ -632,7 +626,7 @@ ysh provides a simple, interactive way to play with YAML. If you type in Perl
 code, it displays the result in YAML. If you type in YAML it turns it into
 Perl code.
 
-To run ysh, (assuming you installed it along with YAML.pm) simply type:
+To run ysh, (assuming you installed it along with YAML::Old) simply type:
 
   ysh [options]
 
@@ -641,18 +635,18 @@ options.
 
 = Bugs & Deficiencies
 
-If you find a bug in YAML, please try to recreate it in the YAML Shell with
-logging turned on ('ysh -L'). When you have successfully reproduced the bug,
-please mail the LOG file to the author (ingy@cpan.org).
+If you find a bug in YAML::Old, please try to recreate it in the YAML Shell
+with logging turned on ('ysh -L'). When you have successfully reproduced the
+bug, please mail the LOG file to the author (ingy@cpan.org).
 
 WARNING: This is still *ALPHA* code. Well, most of this code has been around
 for years...
 
-BIGGER WARNING: YAML.pm has been slow in the making, but I am committed to
+BIGGER WARNING: YAML::Old has been slow in the making, but I am committed to
 having top notch YAML tools in the Perl world. The YAML team is close to
-finalizing the YAML 1.1 spec. This version of YAML.pm is based off of a very
+finalizing the YAML 1.1 spec. This version of YAML::Old is based off of a very
 old pre 1.0 spec. In actuality there isn't a ton of difference, and this
-YAML.pm is still fairly useful. Things will get much better in the future.
+YAML::Old is still fairly useful. Things will get much better in the future.
 
 = Resources
 

@@ -1,5 +1,5 @@
 use Test::More tests => 6;
-use YAML ();
+use YAML::Old ();
 use B;
 
 my $yaml = <<'EOM';
@@ -10,9 +10,9 @@ EOM
 
 my $data1 = do {
     local $YAML::Numify = 1;
-    YAML::Load($yaml);
+    YAML::Old::Load($yaml);
 };
-my $data2 = YAML::Load($yaml);
+my $data2 = YAML::Old::Load($yaml);
 
 my $int1 = B::svref_2object(\$data1->{int})->FLAGS & (B::SVp_IOK | B::SVp_NOK);
 my $int2 = B::svref_2object(\$data2->{int})->FLAGS & (B::SVp_IOK | B::SVp_NOK);

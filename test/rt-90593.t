@@ -8,7 +8,7 @@ else {
     plan tests => 2;
 }
 
-use YAML;
+use YAML::Old;
 use constant LENGTH => 1000000;
 
 $SIG{__WARN__} = sub { die @_ };

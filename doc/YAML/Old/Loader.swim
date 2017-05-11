@@ -5,15 +5,15 @@ YAML class for loading Perl objects to YAML
 
 = Synopsis
 
-  use YAML::Loader;
-  my $loader = YAML::Loader->new;
+  use YAML::Old::Loader;
+  my $loader = YAML::Old::Loader->new;
   my $hash = $loader->load(<<'...');
   foo: bar
   ...
 
 = Description
 
-YAML::Loader is the module that YAML.pm used to deserialize YAML to Perl
+YAML::Old::Loader is the module that YAML::Old used to deserialize YAML to Perl
 objects. It is fully object oriented and usable on its own.
 
 = Author

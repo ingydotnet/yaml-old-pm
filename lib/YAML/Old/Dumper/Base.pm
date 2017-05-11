@@ -1,8 +1,8 @@
-package YAML::Dumper::Base;
+package YAML::Old::Dumper::Base;
 
-use YAML::Mo;
+use YAML::Old::Mo;
 
-use YAML::Node;
+use YAML::Old::Node;
 
 # YAML Dumping options
 has spec_version    => default => sub {'1.0'};
@@ -79,7 +79,7 @@ sub blessed {
     my $self = shift;
     my ($ref) = @_;
     $ref = \$_[0] unless ref $ref;
-    my (undef, undef, $node_id) = YAML::Mo::Object->node_info($ref);
+    my (undef, undef, $node_id) = YAML::Old::Mo::Object->node_info($ref);
     $self->{blessed_map}->{$node_id};
 }
 
@@ -88,9 +88,9 @@ sub bless {
     my ($ref, $blessing) = @_;
     my $ynode;
     $ref = \$_[0] unless ref $ref;
-    my (undef, undef, $node_id) = YAML::Mo::Object->node_info($ref);
+    my (undef, undef, $node_id) = YAML::Old::Mo::Object->node_info($ref);
     if (not defined $blessing) {
-        $ynode = YAML::Node->new($ref);
+        $ynode = YAML::Old::Node->new($ref);
     }
     elsif (ref $blessing) {
         $self->die() unless ynode($blessing);

@@ -1,7 +1,7 @@
 use strict;
 use lib -e 't' ? 't' : 'test';
 use TestYAML tests => 7;
-use YAML ();   # [CPAN #74687] must load before B::Deparse for B::Deparse < 0.71
+use YAML::Old ();   # [CPAN #74687] must load before B::Deparse for B::Deparse < 0.71
 
 use B::Deparse;
 if (new B::Deparse -> coderef2text ( sub { no strict; 1; use strict; 1; })

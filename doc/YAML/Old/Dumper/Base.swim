@@ -1,16 +1,16 @@
-YAML::Loader::Base
+YAML::Dumper::Base
 ==================
 
-Base class for YAML Loader classes
+Base class for YAML Dumper classes
 
 = Synopsis
 
-  package YAML::Loader::Something;
-  use YAML::Loader::Base -base;
+  package YAML::Old::Dumper::Something;
+  use YAML::Old::Dumper::Base -base;
 
 = Description
 
-YAML::Loader::Base is a base class for creating YAML loader classes.
+YAML::Old::Dumper::Base is a base class for creating YAML dumper classes.
 
 = Author
 

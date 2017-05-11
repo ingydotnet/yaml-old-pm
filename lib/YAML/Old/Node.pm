@@ -1,11 +1,11 @@
 use strict; use warnings;
-package YAML::Node;
+package YAML::Old::Node;
 
-use YAML::Tag;
-require YAML::Mo;
+use YAML::Old::Tag;
+require YAML::Old::Mo;
 
 use Exporter;
-our @ISA     = qw(Exporter YAML::Mo::Object);
+our @ISA     = qw(Exporter YAML::Old::Mo::Object);
 our @EXPORT  = qw(ynode);
 
 sub ynode {
@@ -29,11 +29,11 @@ sub new {
     my ($class, $node, $tag) = @_;
     my $self;
     $self->{NODE} = $node;
-    my (undef, $type) = YAML::Mo::Object->node_info($node);
+    my (undef, $type) = YAML::Old::Mo::Object->node_info($node);
     $self->{KIND} = (not defined $type) ? 'scalar' :
                     ($type eq 'ARRAY') ? 'sequence' :
                     ($type eq 'HASH') ? 'mapping' :
-                    $class->die("Can't create YAML::Node from '$type'");
+                    $class->die("Can't create YAML::Old::Node from '$type'");
     tag($self, ($tag || ''));
     if ($self->{KIND} eq 'scalar') {
         yaml_scalar->new($self, $_[1]);
@@ -48,7 +48,7 @@ sub kind { $_->{KIND} }
 sub tag {
     my ($self, $value) = @_;
     if (defined $value) {
-               $self->{TAG} = YAML::Tag->new($value);
+               $self->{TAG} = YAML::Old::Tag->new($value);
         return $self;
     }
     else {
@@ -69,7 +69,7 @@ sub keys {
 #==============================================================================
 package yaml_scalar;
 
-@yaml_scalar::ISA = qw(YAML::Node);
+@yaml_scalar::ISA = qw(YAML::Old::Node);
 
 sub new {
     my ($class, $self) = @_;
@@ -95,7 +95,7 @@ sub STORE {
 #==============================================================================
 package yaml_sequence;
 
-@yaml_sequence::ISA = qw(YAML::Node);
+@yaml_sequence::ISA = qw(YAML::Old::Node);
 
 sub new {
     my ($class, $self) = @_;
@@ -135,7 +135,7 @@ sub undone {
 #==============================================================================
 package yaml_mapping;
 
-@yaml_mapping::ISA = qw(YAML::Node);
+@yaml_mapping::ISA = qw(YAML::Old::Node);
 
 sub new {
     my ($class, $self) = @_;

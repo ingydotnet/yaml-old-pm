@@ -11,7 +11,7 @@ BEGIN {
 }
 use TestYAML tests => 6;
 
-use YAML qw/DumpFile LoadFile/;
+use YAML::Old qw/DumpFile LoadFile/;
 
 ok defined &DumpFile,
     'DumpFile exported';

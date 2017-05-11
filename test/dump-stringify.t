@@ -36,8 +36,8 @@ $YAML::Stringify = 0;
 $yaml = Dump($foo);
 is $yaml, $object_dump, "Global stringification disabled dump";
 
-require YAML::Dumper;
-my $dumper = YAML::Dumper->new;
+require YAML::Old::Dumper;
+my $dumper = YAML::Old::Dumper->new;
 
 $yaml = $dumper->dump($foo);
 is $yaml, $object_dump, "Local stringification default dump";

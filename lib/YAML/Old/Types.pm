@@ -1,43 +1,43 @@
-package YAML::Types;
+package YAML::Old::Types;
 
-use YAML::Mo;
-use YAML::Node;
+use YAML::Old::Mo;
+use YAML::Old::Node;
 
 # XXX These classes and their APIs could still use some refactoring,
 # but at least they work for now.
 #-------------------------------------------------------------------------------
-package YAML::Type::blessed;
+package YAML::Old::Type::blessed;
 
-use YAML::Mo; # XXX
+use YAML::Old::Mo; # XXX
 
 sub yaml_dump {
     my $self = shift;
     my ($value) = @_;
-    my ($class, $type) = YAML::Mo::Object->node_info($value);
+    my ($class, $type) = YAML::Old::Mo::Object->node_info($value);
     no strict 'refs';
     my $kind = lc($type) . ':';
     my $tag = ${$class . '::ClassTag'} ||
               "!perl/$kind$class";
     if ($type eq 'REF') {
-        YAML::Node->new(
-            {(&YAML::VALUE, ${$_[0]})}, $tag
+        YAML::Old::Node->new(
+            {(&YAML::Old::VALUE, ${$_[0]})}, $tag
         );
     }
     elsif ($type eq 'SCALAR') {
         $_[1] = $$value;
-        YAML::Node->new($_[1], $tag);
+        YAML::Old::Node->new($_[1], $tag);
     }
     elsif ($type eq 'GLOB') {
         # blessed glob support is minimal, and will not round-trip
         # initial aim: to not cause an error
-        return YAML::Type::glob->yaml_dump($value, $tag);
+        return YAML::Old::Type::glob->yaml_dump($value, $tag);
     } else {
-        YAML::Node->new($value, $tag);
+        YAML::Old::Node->new($value, $tag);
     }
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::undef;
+package YAML::Old::Type::undef;
 
 sub yaml_dump {
     my $self = shift;
@@ -48,7 +48,7 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::glob;
+package YAML::Old::Type::glob;
 
 sub yaml_dump {
     my $self = shift;
@@ -56,7 +56,7 @@ sub yaml_dump {
     my $tag = pop @_ if 2==@_;
 
     $tag = '!perl/glob:' unless defined $tag;
-    my $ynode = YAML::Node->new({}, $tag);
+    my $ynode = YAML::Old::Node->new({}, $tag);
     for my $type (qw(PACKAGE NAME SCALAR ARRAY HASH CODE IO)) {
         my $value = *{$_[0]}{$type};
         $value = $$value if $type eq 'SCALAR';
@@ -65,7 +65,7 @@ sub yaml_dump {
                 my @stats = qw(device inode mode links uid gid rdev size
                                atime mtime ctime blksize blocks);
                 undef $value;
-                $value->{stat} = YAML::Node->new({});
+                $value->{stat} = YAML::Old::Node->new({});
                 if ($value->{fileno} = fileno(*{$_[0]})) {
                     local $^W;
                     map {$value->{stat}{shift @stats} = $_} stat(*{$_[0]});
@@ -120,7 +120,7 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::code;
+package YAML::Old::Type::code;
 
 my $dummy_warned = 0;
 my $default = '{ "DUMMY" }';
@@ -129,7 +129,7 @@ sub yaml_dump {
     my $self = shift;
     my $code;
     my ($dumpflag, $value) = @_;
-    my ($class, $type) = YAML::Mo::Object->node_info($value);
+    my ($class, $type) = YAML::Old::Mo::Object->node_info($value);
     my $tag = "!perl/code";
     $tag .= ":$class" if defined $class;
     if (not $dumpflag) {
@@ -145,7 +145,7 @@ sub yaml_dump {
             $code = $deparse->coderef2text($value);
         };
         if ($@) {
-            warn YAML::YAML_DUMP_WARN_DEPARSE_FAILED() if $^W;
+            warn YAML::Old::YAML_DUMP_WARN_DEPARSE_FAILED() if $^W;
             $code = $default;
         }
         bless $value, $class if $class;
@@ -153,7 +153,7 @@ sub yaml_dump {
         $code .= "\n";
     }
     $_[2] = $code;
-    YAML::Node->new($_[2], $tag);
+    YAML::Old::Node->new($_[2], $tag);
 }
 
 sub yaml_load {
@@ -177,27 +177,27 @@ sub yaml_load {
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::ref;
+package YAML::Old::Type::ref;
 
 sub yaml_dump {
     my $self = shift;
-    YAML::Node->new({(&YAML::VALUE, ${$_[0]})}, '!perl/ref')
+    YAML::Old::Node->new({(&YAML::Old::VALUE, ${$_[0]})}, '!perl/ref')
 }
 
 sub yaml_load {
     my $self = shift;
     my ($node, $class, $loader) = @_;
     $loader->die('YAML_LOAD_ERR_NO_DEFAULT_VALUE', 'ptr')
-      unless exists $node->{&YAML::VALUE};
-    return \$node->{&YAML::VALUE};
+      unless exists $node->{&YAML::Old::VALUE};
+    return \$node->{&YAML::Old::VALUE};
 }
 
 #-------------------------------------------------------------------------------
-package YAML::Type::regexp;
+package YAML::Old::Type::regexp;
 
 # XXX Be sure to handle blessed regexps (if possible)
 sub yaml_dump {
-    die "YAML::Type::regexp::yaml_dump not currently implemented";
+    die "YAML::Old::Type::regexp::yaml_dump not currently implemented";
 }
 
 use constant _QR_TYPES => {

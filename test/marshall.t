@@ -11,7 +11,7 @@ BEGIN {
     require TestYAMLBase;
     @Foo::Bar::ISA = 'TestYAMLBase';
 }
-use YAML::Marshall;
+use YAML::Old::Marshall;
 
 sub yaml_dump {
     my $self = shift;
@@ -36,7 +36,7 @@ BEGIN {
     require TestYAMLBase;
     @Bar::Baz::ISA = 'TestYAMLBase';
 }
-use YAML::Marshall 'random/object:bar.baz';
+use YAML::Old::Marshall 'random/object:bar.baz';
 
 #-------------------------------------------------------------------------------
 package Baz::Foo;
@@ -44,7 +44,7 @@ BEGIN {
     require TestYAMLBase;
     @Bar::Foo::ISA = 'TestYAMLBase';
 }
-use YAML::Marshall;
+use YAML::Old::Marshall;
 
 sub yaml_dump {
     my $self = shift;

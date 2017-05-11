@@ -8,7 +8,7 @@ BEGIN {
 }
 use TestYAML tests => 3;
 
-use YAML;
+use YAML::Old;
 
 ok defined(&Dump),
     'Dump() is exported';

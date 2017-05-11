@@ -1,15 +1,15 @@
 use strict;
 use lib -e 't' ? 't' : 'test';
 use TestYAML tests => 6;
-use YAML ();
-use YAML::Dumper;
+use YAML::Old ();
+use YAML::Old::Dumper;
 
 $YAML::QuoteNumericStrings = 1;
 filters { perl => [qw'eval yaml_dump'], };
 
-ok( YAML::Dumper->is_literal_number(1),    '1 is a literal number' );
-ok( !YAML::Dumper->is_literal_number("1"), '"1" is not a literal number' );
-ok( YAML::Dumper->is_literal_number( "1" + 1 ), '"1" +1  is a literal number' );
+ok( YAML::Old::Dumper->is_literal_number(1),    '1 is a literal number' );
+ok( !YAML::Old::Dumper->is_literal_number("1"), '"1" is not a literal number' );
+ok( YAML::Old::Dumper->is_literal_number( "1" + 1 ), '"1" +1  is a literal number' );
 
 run_is;
 

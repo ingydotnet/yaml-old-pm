@@ -8,7 +8,7 @@ BEGIN {
 }
 use TestYAML tests => 9;
 
-use YAML qw(Dump Load freeze thaw);
+use YAML::Old qw(Dump Load freeze thaw);
 
 my $hash = { foo => 42, bar => 44 };
 

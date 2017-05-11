@@ -1,11 +1,11 @@
-package YAML::Dumper;
+package YAML::Old::Dumper;
 
-use YAML::Mo;
-extends 'YAML::Dumper::Base';
+use YAML::Old::Mo;
+extends 'YAML::Old::Dumper::Base';
 
-use YAML::Dumper::Base;
-use YAML::Node;
-use YAML::Types;
+use YAML::Old::Dumper::Base;
+use YAML::Old::Node;
+use YAML::Old::Types;
 use Scalar::Util qw();
 use B ();
 use Carp ();
@@ -77,7 +77,7 @@ sub _prewalk {
     # Handle typeglobs
     if ($type eq 'GLOB') {
         $self->transferred->{$node_id} =
-          YAML::Type::glob->yaml_dump($_[0]);
+          YAML::Old::Type::glob->yaml_dump($_[0]);
         $self->_prewalk($self->transferred->{$node_id});
         return;
     }
@@ -113,7 +113,7 @@ sub _prewalk {
     # Handle code refs
     if ($type eq 'CODE') {
         $self->transferred->{$node_id} = 'placeholder';
-        YAML::Type::code->yaml_dump(
+        YAML::Old::Type::code->yaml_dump(
             $self->dump_code,
             $_[0],
             $self->transferred->{$node_id}
@@ -131,7 +131,7 @@ sub _prewalk {
         }
         elsif ($type eq 'SCALAR') {
             $self->transferred->{$node_id} = 'placeholder';
-            YAML::Type::blessed->yaml_dump
+            YAML::Old::Type::blessed->yaml_dump
               ($_[0], $self->transferred->{$node_id});
             ($class, $type, $node_id) =
               $self->node_info(\ $self->transferred->{$node_id}, $stringify);
@@ -139,16 +139,16 @@ sub _prewalk {
             return;
         }
         else {
-            $value = YAML::Type::blessed->yaml_dump($value);
+            $value = YAML::Old::Type::blessed->yaml_dump($value);
         }
         $self->transferred->{$node_id} = $value;
         (undef, $type, $node_id) = $self->node_info($value, $stringify);
     }
 
     # Handle YAML Blessed things
-    require YAML;
-    if (defined YAML->global_object()->{blessed_map}{$node_id}) {
-        $value = YAML->global_object()->{blessed_map}{$node_id};
+    require YAML::Old;
+    if (defined YAML::Old->global_object()->{blessed_map}{$node_id}) {
+        $value = YAML::Old->global_object()->{blessed_map}{$node_id};
         $self->transferred->{$node_id} = $value;
         ($class, $type, $node_id) = $self->node_info($value, $stringify);
         $self->_prewalk($value);
@@ -157,7 +157,7 @@ sub _prewalk {
 
     # Handle hard refs
     if ($type eq 'REF' or $type eq 'SCALAR') {
-        $value = YAML::Type::ref->yaml_dump($value);
+        $value = YAML::Old::Type::ref->yaml_dump($value);
         $self->transferred->{$node_id} = $value;
         (undef, $type, $node_id) = $self->node_info($value, $stringify);
     }
@@ -165,10 +165,10 @@ sub _prewalk {
     # Handle ref-to-glob's
     elsif ($type eq 'GLOB') {
         my $ref_ynode = $self->transferred->{$node_id} =
-          YAML::Type::ref->yaml_dump($value);
+          YAML::Old::Type::ref->yaml_dump($value);
 
         my $glob_ynode = $ref_ynode->{&VALUE} =
-          YAML::Type::glob->yaml_dump($$value);
+          YAML::Old::Type::glob->yaml_dump($$value);
 
         (undef, undef, $node_id) = $self->node_info($glob_ynode, $stringify);
         $self->transferred->{$node_id} = $glob_ynode;
@@ -193,7 +193,7 @@ sub _prewalk {
 
     # Unknown type. Need to know about it.
     $self->warn(<<"...");
-YAML::Dumper can't handle dumping this type of data.
+YAML::Old::Dumper can't handle dumping this type of data.
 Please report this to the author.
 
 id:    $node_id
@@ -444,7 +444,7 @@ sub _emit_str {
             $self->_emit_block($LIT_CHAR, $_[0]),
             $self->_emit($eb), last
               if $self->use_block;
-              Carp::cluck "[YAML] \$UseFold is no longer supported"
+              Carp::cluck "[YAML::Old] \$UseFold is no longer supported"
               if $self->use_fold;
             $self->_emit($sf),
             $self->_emit_double($_[0]),
@@ -498,7 +498,7 @@ sub is_valid_plain {
     my $self = shift;
     return 0 unless length $_[0];
     return 0 if $self->quote_numeric_strings and Scalar::Util::looks_like_number($_[0]);
-    # refer to YAML::Loader::parse_inline_simple()
+    # refer to YAML::Old::Loader::parse_inline_simple()
     return 0 if $_[0] =~ /^[\s\{\[\~\`\'\"\!\@\#\>\|\%\&\?\*\^]/;
     return 0 if $_[0] =~ /[\{\[\]\},]/;
     return 0 if $_[0] =~ /[:\-\?]\s/;

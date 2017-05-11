@@ -1,6 +1,6 @@
-package YAML::Loader::Base;
+package YAML::Old::Loader::Base;
 
-use YAML::Mo;
+use YAML::Old::Mo;
 
 has load_code     => default => sub {0};
 has preserve      => default => sub {0};

@@ -10,11 +10,11 @@ our @ISA = 'TestYAMLBase';
 
 sub yaml_dump {
     my $self = shift;
-    my $node = YAML::Node->new({
+    my $node = YAML::Old::Node->new({
         two => $self->{two} - 1,
         one => $self->{one} + 1,
     }, 'perl/Foo::Bar');
-    YAML::Node::ynode($node)->keys(['two', 'one']);
+    YAML::Old::Node::ynode($node)->keys(['two', 'one']);
     return $node;
 }
 

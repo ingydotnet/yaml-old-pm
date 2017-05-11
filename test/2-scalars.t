@@ -2,8 +2,8 @@
 use strict;
 use Test::More;
 
-require YAML;
-YAML->import;
+require YAML::Old;
+YAML::Old->import;
 
 is(Dump(42),    "--- 42\n");
 is(Load("--- 42\n"), 42);

@@ -1,5 +1,5 @@
 use strict; use warnings;
-package YAML::Tag;
+package YAML::Old::Tag;
 
 use overload '""' => sub { ${$_[0]} };
 

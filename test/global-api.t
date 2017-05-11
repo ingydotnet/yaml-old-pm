@@ -7,17 +7,17 @@ BEGIN {
         grep { not /^(Dump|Load)(File)?$/ } @Test::YAML::EXPORT;
 }
 use TestYAML tests => 4;
-use YAML;
+use YAML::Old;
 
 {
     no warnings qw'once redefine';
-    require YAML::Dumper;
+    require YAML::Old::Dumper;
 
-    local *YAML::Dumper::dump =
+    local *YAML::Old::Dumper::dump =
         sub { return 'got to dumper' };
 
-    require YAML::Loader;
-    local *YAML::Loader::load =
+    require YAML::Old::Loader;
+    local *YAML::Old::Loader::load =
         sub { return 'got to loader' };
 
     is Dump(\%ENV), 'got to dumper',
@@ -26,7 +26,7 @@ use YAML;
         'Load got to the business end';
 
     is Dump(\%ENV), 'got to dumper',
-        'YAML::Dump got to the business end';
+        'YAML::Old::Dump got to the business end';
     is Load(\%ENV), 'got to loader',
-        'YAML::Load got to the business end';
+        'YAML::Old::Load got to the business end';
 }

@@ -3,7 +3,7 @@ use lib -e 't' ? 't' : 'test';
 use TestYAML tests => 38;
 $^W = 1;
 
-use YAML::Error;
+use YAML::Old::Error;
 
 filters {
     error => 'regexp',
@@ -274,7 +274,7 @@ foo: baz
 boo: bah
 
 === Test duplicate key message
-+++ error: YAML Warning: Duplicate map key 'foo' found. Ignoring.
++++ error: YAML::Old Warning: Duplicate map key 'foo' found. Ignoring.
 +++ yaml
 ---
 foo: bar
