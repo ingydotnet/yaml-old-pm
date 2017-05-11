@@ -1,8 +1,8 @@
 =meta: 0.0.2
 
-name: YAML
+name: YAML-Old
 version: 1.23
-abstract: YAML Ain't Markup Language™
+abstract: Old YAML.pm Legacy Code
 homepage: http://yaml.org
 language: perl
 license: perl
@@ -17,8 +17,8 @@ author:
   freenode: ingy
 
 devel:
-  git: https://github.com/ingydotnet/yaml-pm
-  bug: https://github.com/ingydotnet/yaml-pm/issues
+  git: https://github.com/ingydotnet/yaml-old-pm
+  bug: https://github.com/ingydotnet/yaml-old-pm/issues
   irc: irc.perl.org#yaml
 
 requires:
@@ -29,4 +29,9 @@ test:
     Test::YAML: 1.05
     Test::More: 0.88
 
-see: YAML::XS
+see:
+- YAML
+- YAML::XS
+
+# XXX temporary
+branch: master-new
