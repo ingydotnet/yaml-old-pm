@@ -32,6 +32,3 @@ test:
 see:
 - YAML
 - YAML::XS
-
-# XXX temporary
-branch: master-new
