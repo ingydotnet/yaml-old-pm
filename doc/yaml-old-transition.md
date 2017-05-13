@@ -71,7 +71,6 @@ YAML::Mo
 YAML::Node
 YAML::Tag
 YAML::Types
-YAML::Old
 ```
 
 Use the `YAML::Old::*` versions instead.
