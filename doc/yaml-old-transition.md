@@ -4,7 +4,14 @@ YAML to YAML::Old Transition
 You are probably reading this because a Perl 5 YAML.pm error message told you
 to. Welcome.
 
--- Ingy and Tina, May 2017
+YAML.pm is udergoing some exciting, and long needed changes.  This page will
+tell you:
+
+* What's going on with YAML changes.
+* How you can deal with your unexpected YAML issues.
+* Our schedule for deployment and deprecation.
+
+-- Ingy and Tina, October 2017
 
 ## SHORT ANSWER
 
@@ -77,6 +84,19 @@ Use the `YAML::Old::*` versions instead.
 
 YAML::Any is still in the YAML distribution and is unchanged. It may be
 deprecated. We are still thinking it over.
+
+## Deprecation Schedule
+
+* October 2017 - New YAML.pm is released that delegates old usage to YAML::Old
+
+  The modules listed above will die with a message pointing here, **Except**
+  for `YAML::Node`, `YAML::Loader` and `YAML::Dumper`. Those 3 are known to be
+  used directly and will just issue a warning.
+
+* December 2017 - All modules above (including those 3) will die.
+
+* February 2018 - All the modules above will be reclaimed, and may be reissued
+  to do new things.
 
 ## Support
 
